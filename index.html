@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>CRM AI 竞品深度研究站</title>
+<style>
+:root{
+ --bg:#f5f7fb; --panel:#fff; --text:#172033; --muted:#687386; --line:#e5e9f0;
+ --nav:#111827; --nav2:#182236; --blue:#4e6bf2; --blueSoft:#eef2ff; --green:#168a63;
+ --orange:#c97812; --red:#c64d4a; --purple:#7657c8; --shadow:0 10px 30px rgba(19,34,64,.06);
+ --radius:16px;
+}
+*{box-sizing:border-box} html,body{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;color:var(--text);background:var(--bg)}
+button,a{font:inherit}.app{min-height:100vh}
+.sidebar{position:fixed;z-index:20;left:0;top:0;bottom:0;width:250px;background:linear-gradient(180deg,var(--nav),#0c1322);color:#cbd5e1;padding:20px 14px;overflow:auto}
+.logo{padding:3px 10px 18px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:14px}.logo b{display:block;color:#fff;font-size:17px}.logo span{font-size:11px;color:#7e8ca5}
+.menu-title{font-size:10px;letter-spacing:.12em;color:#60708c;padding:14px 11px 7px;text-transform:uppercase}
+.menu-btn{width:100%;border:0;background:transparent;color:#b9c5d6;text-align:left;padding:10px 11px;border-radius:10px;cursor:pointer;margin:2px 0;display:flex;gap:9px;align-items:center}
+.menu-btn:hover{background:rgba(255,255,255,.06);color:#fff}.menu-btn.active{background:#263452;color:#fff;box-shadow:inset 3px 0 0 #7690ff}.menu-btn span{font-size:13px}.menu-btn i{font-style:normal;width:21px;text-align:center;color:#8fa0b9}
+.content{margin-left:250px;min-height:100vh}.topbar{height:62px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);position:sticky;top:0;z-index:15;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px}
+.crumb{font-size:13px;color:#60708c}.updated{font-size:12px;color:#8a94a6}.page{display:none;padding:26px 34px 60px;max-width:1500px;margin:0 auto}.page.active{display:block}
+.page-hero{padding:28px 30px;border-radius:22px;background:linear-gradient(135deg,#10192e 0%,#1b2a52 55%,#2d3f79 100%);color:#fff;box-shadow:var(--shadow);margin-bottom:16px}
+.kicker{font-size:11px;letter-spacing:.14em;color:#9eb0df;margin-bottom:7px}.page-hero h1{font-size:32px;margin:0 0 10px}.page-hero p{max-width:970px;margin:0;color:#d8e0f3;font-size:14px;line-height:1.75}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:650}.badge.blue{background:#edf1ff;color:#455bd2}.page-hero .badge.blue{background:rgba(117,145,255,.15);color:#c8d3ff;border:1px solid rgba(174,192,255,.18)}.badge.green{background:#eaf8f2;color:#167d5c}.badge.orange{background:#fff5e6;color:#aa6812}.badge.gray{background:#f0f2f6;color:#697489}.badge.red{background:#fff0ef;color:#b64b46}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:12px;border-radius:12px}.stat span{display:block;font-size:11px;color:#9fb0d1}.stat b{display:block;font-size:17px;margin:3px 0}.stat small{font-size:11px;color:#c5cde0}
+.subnav{position:sticky;top:62px;z-index:12;background:var(--bg);display:flex;gap:6px;padding:10px 0 12px;overflow:auto}.subnav button{white-space:nowrap;border:1px solid var(--line);background:#fff;color:#5c687b;padding:8px 12px;border-radius:10px;cursor:pointer;font-size:12px}.subnav button.active{background:#17233d;color:#fff;border-color:#17233d}
+.subpage{display:none}.subpage.active{display:block}.section-title{display:flex;align-items:flex-end;justify-content:space-between;margin:12px 0}.section-title h2{font-size:22px;margin:0}.section-title p{margin:0;color:var(--muted);font-size:12px}
+.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}.card h4{font-size:15px;margin:0 0 9px}.card p{font-size:13px;color:#4c586c;margin:0 0 8px;line-height:1.75}.card strong{color:#202b40}.card .lead{font-size:15px;color:#27334a}
+.callout{border-left:3px solid var(--blue);background:#f4f7ff;border-radius:0 12px 12px 0;padding:13px 15px;font-size:13px;color:#3c4962;margin:12px 0}.callout.warn{border-left-color:#d18a24;background:#fff8ec}.callout.good{border-left-color:#15976e;background:#effaf6}.callout.red{border-left-color:#d35a55;background:#fff3f2}
+.check{margin:8px 0 0;padding:0;list-style:none}.check li{position:relative;padding:6px 0 6px 20px;font-size:13px;color:#4e5a6d;border-bottom:1px dashed #edf0f4}.check li:last-child{border-bottom:0}.check li:before{content:"✓";position:absolute;left:0;color:#1a9a70;font-weight:700}
+.compare{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}.compare th,.compare td{font-size:12px;text-align:left;padding:11px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:top}.compare th{background:#f8fafc;color:#455066}.compare tr:last-child td{border-bottom:0}.compare th:last-child,.compare td:last-child{border-right:0}
+.flow{display:flex;gap:8px;flex-wrap:wrap}.flow-step{flex:1 1 145px;min-width:145px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px}.flow-step i{display:flex;width:24px;height:24px;border-radius:50%;background:var(--blueSoft);color:var(--blue);align-items:center;justify-content:center;font-size:11px;font-style:normal;font-weight:800;margin-bottom:8px}.flow-step b{display:block;font-size:13px;margin-bottom:4px}.flow-step span{font-size:11px;color:var(--muted);line-height:1.55}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.shot{margin:0;border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden;box-shadow:var(--shadow);cursor:zoom-in}.shot img{display:block;width:100%;height:300px;object-fit:contain;background:#f9fafc}.shot figcaption{padding:11px 13px;border-top:1px solid var(--line)}.shot figcaption b{display:block;font-size:12px}.shot figcaption span{display:block;font-size:10px;color:#8a94a6;margin-top:2px}
+.mock{border:1px solid #dce2eb;border-radius:15px;background:#fff;overflow:hidden;box-shadow:var(--shadow)}.mockbar{height:38px;background:#f7f8fa;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:5px;padding:0 11px}.mockbar i{width:8px;height:8px;background:#c6ccd5;border-radius:50%}.mockbody{display:grid;grid-template-columns:150px 1fr 230px;min-height:350px}.mockside,.mockright{background:#fafbfd;padding:13px}.mockside{border-right:1px solid var(--line)}.mockright{border-left:1px solid var(--line)}.mockmain{padding:17px}.skeleton{height:9px;background:#e8ecf2;border-radius:5px;margin:9px 0}.w80{width:80%}.w55{width:55%}.w35{width:35%}.chat{border:1px solid var(--line);border-radius:11px;padding:12px;margin:9px 0;font-size:12px;color:#49556a}.result{background:#f4f7ff;border:1px solid #dde6ff;border-radius:11px;padding:11px;font-size:12px;margin:9px 0}
+.arch{background:#101827;color:#dbe4f5;border-radius:15px;padding:18px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre}
+.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.source{text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;display:flex;justify-content:space-between;gap:10px}.source span{font-size:12px;color:#33405a}.source em{font-style:normal;font-size:10px;color:#8791a2;white-space:nowrap}.source:hover{border-color:#aebbf8;background:#fafbff}
+.judgment{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pros,.cons{border-radius:14px;padding:16px}.pros{background:#effaf6;border:1px solid #d3eee3}.cons{background:#fff6ef;border:1px solid #f0dfcf}.pros h4,.cons h4{margin:0 0 8px;font-size:14px}
+.timeline{position:relative;padding-left:20px}.timeline:before{content:"";position:absolute;left:6px;top:7px;bottom:7px;width:2px;background:#e0e5ed}.titem{position:relative;padding:0 0 16px 12px}.titem:before{content:"";position:absolute;left:-18px;top:5px;width:10px;height:10px;border-radius:50%;background:#6c82f3;border:3px solid #eef2ff}.titem b{font-size:13px}.titem p{font-size:12px;color:var(--muted);margin:3px 0 0}
+.matrix-label{font-weight:700}.high{color:#13805e;font-weight:700}.mid{color:#b47716;font-weight:700}.low{color:#a94d48;font-weight:700}
+.modal{display:none;position:fixed;inset:0;z-index:99;background:rgba(5,10,20,.86);padding:30px;align-items:center;justify-content:center}.modal.open{display:flex}.modal-inner{max-width:1200px;width:100%}.modal img{max-width:100%;max-height:80vh;display:block;margin:auto;background:#fff;border-radius:10px}.modal p{color:#fff;text-align:center;font-size:12px}.modal .close{position:absolute;right:24px;top:18px;color:white;border:0;background:transparent;font-size:28px;cursor:pointer}
+@media(max-width:1100px){.stats,.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.mockbody{grid-template-columns:130px 1fr}.mockright{display:none}}
+@media(max-width:780px){.sidebar{position:relative;width:100%;height:auto}.content{margin-left:0}.topbar{position:relative}.page{padding:16px}.g2,.g3,.g4,.shots,.sources,.judgment,.stats{grid-template-columns:1fr}.subnav{top:0}.mockbody{grid-template-columns:1fr}.mockside{display:none}}
+
+.term-note{margin:-4px 0 14px;background:#fff;border:1px solid #e5e9f0;border-radius:12px;padding:10px 13px;font-size:12px;color:#596579;box-shadow:0 5px 18px rgba(19,34,64,.04)}.term-note b{color:#33405a}
+
+.top-actions{display:flex;align-items:center;gap:10px}.glossary-btn{border:1px solid #dfe4ec;background:#fff;color:#42506a;padding:7px 10px;border-radius:9px;font-size:12px;cursor:pointer}.glossary-btn:hover{background:#f7f9fd;border-color:#aebbf8}.glossary-modal{display:none;position:fixed;inset:0;z-index:110;background:rgba(5,10,20,.56);align-items:center;justify-content:center;padding:24px}.glossary-modal.open{display:flex}.glossary-panel{width:min(900px,96vw);max-height:86vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.24)}.glossary-head{position:sticky;top:0;background:#fff;z-index:2;padding:18px 20px;border-bottom:1px solid #e5e9f0;display:flex;justify-content:space-between;align-items:center}.glossary-head b{display:block;font-size:17px}.glossary-head span{display:block;color:#8791a2;font-size:11px;margin-top:3px}.glossary-head button{border:0;background:#f1f3f7;width:30px;height:30px;border-radius:50%;font-size:20px;cursor:pointer}.glossary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px}.glossary-grid>div{border:1px solid #e5e9f0;border-radius:12px;padding:12px}.glossary-grid b{display:block;font-size:12px;color:#2e3b55;margin-bottom:5px}.glossary-grid span{display:block;font-size:12px;color:#687386;line-height:1.55}@media(max-width:780px){.glossary-grid{grid-template-columns:1fr}.updated{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<div class="logo"><b>CRM AI 竞品研究站</b><span>多页面深度研究站 · 2026.08</span></div>
+<div class="menu-title">研究总览</div><button class="menu-btn" data-page="overview" onclick="showPage('overview')"><i>◫</i><span>总对比</span></button><div class="menu-title">竞品</div><button class="menu-btn" data-page="salesforce" onclick="showPage('salesforce')"><i>S</i><span>Salesforce</span></button><button class="menu-btn" data-page="hubspot" onclick="showPage('hubspot')"><i>H</i><span>HubSpot</span></button><button class="menu-btn" data-page="microsoft" onclick="showPage('microsoft')"><i>M</i><span>Microsoft Dynamics 365</span></button><button class="menu-btn" data-page="zoho" onclick="showPage('zoho')"><i>Z</i><span>Zoho CRM</span></button><button class="menu-btn" data-page="fxiaoke" onclick="showPage('fxiaoke')"><i>纷</i><span>纷享销客</span></button><button class="menu-btn" data-page="xiaoshouyi" onclick="showPage('xiaoshouyi')"><i>销</i><span>销售易</span></button><button class="menu-btn" data-page="okki" onclick="showPage('okki')"><i>O</i><span>OKKI</span></button><div class="menu-title">建议</div><button class="menu-btn" data-page="recommend" onclick="showPage('recommend')"><i>◆</i><span>对钉钉 AI CRM 的建议</span></button>
+</aside>
+<div class="content">
+<header class="topbar"><div class="crumb" id="crumb">CRM AI 竞品研究</div><div class="top-actions"><div class="updated">研究版本：2026-08-21 · 图片需联网加载</div><button class="glossary-btn" onclick="openGlossary()">英文术语速查</button></div></header>
+<main class="page" id="page-overview">
+<div class="page-hero">
+<div class="kicker">竞品总体格局</div>
+<h1>总对比：CRM AI 正从“会回答”进入“会工作”</h1>
+<p>这不是传统 CRM 功能矩阵，而是围绕 AI 入口、主动发现、Next Best Action（下一步最佳行动建议）、自动执行、Agent（智能体） 编排、数据语义和治理能力做的产品级对比。</p>
+<div class="badges"><span class="badge blue">2026.08</span><span class="badge green">7 家重点竞品</span><span class="badge orange">以官方资料为主</span></div>
+<div class="stats"><div class="stat"><span>行业主线</span><b>System of Action（行动系统：AI直接推动业务执行）</b><small>从记录系统走向行动系统</small></div><div class="stat"><span>最强平台路线</span><b>Salesforce</b><small>Agentforce + Sales 全链路</small></div><div class="stat"><span>最佳嵌入式体验</span><b>HubSpot</b><small>AI 出现在业务事件之后</small></div><div class="stat"><span>治理最值得看</span><b>Zoho</b><small>Digital Employee（数字员工） 身份与审计</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="overview-landscape" onclick="showSub('overview','landscape')">总体格局</button><button data-sub="overview-matrix" onclick="showSub('overview','matrix')">能力矩阵</button><button data-sub="overview-patterns" onclick="showSub('overview','patterns')">产品范式</button><button data-sub="overview-takeaways" onclick="showSub('overview','takeaways')">关键结论</button><button data-sub="overview-sources" onclick="showSub('overview','sources')">研究说明</button></div><section class="subpage" id="overview-landscape">
+<div class="section-title"><h2>总体格局</h2><p>不是“谁 AI 功能最多”，而是谁完成了闭环。</p></div>
+<div class="grid g3">
+<div class="card"><h4>Salesforce</h4><p><strong>路线：</strong>Agentforce Sales + Prospecting（潜客开发） + Engagement（客户互动/触达） + Sales Management（销售管理AI）。</p><p>目标是把 AI 变成数字销售劳动力，覆盖研究、优先级、触达、资格判断、交接、商机推进和管理。</p></div>
+<div class="card"><h4>HubSpot</h4><p><strong>路线：</strong>Breeze + Prospecting Agent（潜客开发智能体） + Smart Deal Progression（智能商机推进）。</p><p>产品化极强，强调“Context（业务上下文）”与业务节点嵌入，降低普通销售理解 Agent（智能体） 的门槛。</p></div>
+<div class="card"><h4>Microsoft</h4><p><strong>路线：</strong>Sales Qualification Agent（销售线索资格判断智能体） + Sales Opportunity Agent（销售商机智能体） + M365 Copilot（AI副驾驶）。</p><p>优势是把 CRM Agent（智能体） 融入 Outlook、Teams、Microsoft 365 工作流，同时后台配置与交接机制成熟。</p></div>
+<div class="card"><h4>Zoho</h4><p><strong>路线：</strong>Zia Agents + Agent Store（智能体商店） + Digital Employee（数字员工）。</p><p>重点不是一个聊天助手，而是 Agent（智能体） 的完整生命周期：创建、测试、部署、身份、权限、触发、观测、版本。</p></div>
+<div class="card"><h4>纷享销客</h4><p><strong>路线：</strong>ShareAgent + ShareHive AgentOS（纷享销客智能体操作系统） + 数字专家团。</p><p>前台强调统一 Agent（智能体） 入口，后台是 Agent（智能体）/Skill（技能/能力单元）/知识/上下文/事件日志，且与 CRM/aPaaS（低代码应用平台） 权限与流程融合。</p></div>
+<div class="card"><h4>销售易</h4><p><strong>路线：</strong>NeoAgent 2.0 + 业务语义本体 + Data for AI（面向AI的数据底座）。</p><p>核心竞争点在于让 Agent（智能体） 真正理解企业自定义 CRM 业务语义，而不是只读字段和值。</p></div>
+<div class="card"><h4>OKKI</h4><p><strong>路线：</strong>外贸垂直 AI CRM + AI 客群 + 管理者监测。</p><p>突出外部客户信号、客户动态、谈单进展、经营异动，并把结果整理成销售和管理者的工作队列。</p></div>
+</div>
+<div class="callout good"><b>总判断：</b>领先产品已经从“用户主动问 AI”变成“系统主动感知业务变化 → 判断优先级 → 推荐动作 → 允许 Agent（智能体） 执行 → 回写 CRM → 持续监控”。</div>
+</section><section class="subpage" id="overview-matrix">
+<div class="section-title"><h2>核心能力矩阵</h2><p>成熟度为本轮研究判断，不等同于厂商官方评级。</p></div>
+<table class="compare">
+<thead><tr><th>维度</th><th>Salesforce</th><th>HubSpot</th><th>Microsoft</th><th>Zoho</th><th>纷享销客</th><th>销售易</th><th>OKKI</th></tr></thead>
+<tbody>
+<tr><td class="matrix-label">AI 主入口</td><td>Sales Workspace（销售工作台） / Agent（智能体）</td><td>场景嵌入 + Agent（智能体）</td><td>Copilot（AI副驾驶） / AI Hub（AI管理中心）</td><td>Zia Agents / Store（商店）</td><td>ShareAgent</td><td>NeoAgent</td><td>AI CRM 工作区</td></tr>
+<tr><td class="matrix-label">主动发现</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="high">强</td><td class="high">强</td></tr>
+<tr><td class="matrix-label">Buying（购买） / 外部信号</td><td class="high">强</td><td class="high">强</td><td class="mid">中强</td><td class="mid">中</td><td class="mid">中强</td><td class="mid">中强</td><td class="high">强</td></tr>
+<tr><td class="matrix-label">Next Best Action（下一步最佳行动建议）</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="high">强</td><td class="high">强</td></tr>
+<tr><td class="matrix-label">自动执行 / 回写</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="mid">中强</td></tr>
+<tr><td class="matrix-label">Agent Builder（智能体搭建器）</td><td class="high">强</td><td class="mid">中</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="high">强</td><td class="low">弱 / 非重点</td></tr>
+<tr><td class="matrix-label">身份 / 权限 / 审计</td><td class="high">强</td><td class="mid">中</td><td class="high">强</td><td class="high">很强</td><td class="high">强</td><td class="high">强</td><td class="mid">中</td></tr>
+<tr><td class="matrix-label">业务语义层</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="high">很强</td><td class="mid">中</td></tr>
+<tr><td class="matrix-label">管理者 AI</td><td class="high">强</td><td class="mid">中</td><td class="high">强</td><td class="mid">中强</td><td class="high">强</td><td class="high">强</td><td class="high">很强</td></tr>
+</tbody></table>
+</section><section class="subpage" id="overview-patterns">
+<div class="section-title"><h2>7 家形成的 6 种产品范式</h2><p>未来产品不需要只选一种，可以组合。</p></div>
+<div class="grid g3">
+<div class="card"><h4>① AI Intelligence Workspace（AI智能销售工作台）</h4><p><strong>代表：Salesforce</strong></p><p>AI 直接整理销售今日工作队列，用户先看到“该做什么”，而不是先看到聊天框。</p></div>
+<div class="card"><h4>② AI Embedded Action（嵌入业务场景的AI动作）</h4><p><strong>代表：HubSpot</strong></p><p>AI 嵌入会议、商机等业务节点，在事件结束后自动产生更新建议和下一步。</p></div>
+<div class="card"><h4>③ AI Sidecar（侧边伴随式AI助手）</h4><p><strong>代表：Microsoft</strong></p><p>AI 在 CRM、Outlook、Teams 等工作环境中跟随用户，不要求用户围绕 CRM 页面工作。</p></div>
+<div class="card"><h4>④ Digital Employee（数字员工）</h4><p><strong>代表：Zoho</strong></p><p>Agent（智能体） 作为企业里的正式数字身份，拥有 Role（角色）、Profile（权限配置档案）、Owner（负责人）、Audit（审计记录）。</p></div>
+<div class="card"><h4>⑤ Unified Agent（统一智能体入口）</h4><p><strong>代表：纷享销客</strong></p><p>前台一个 ShareAgent，后台自动路由 Agent（智能体） / Skill（技能/能力单元），普通销售不需要理解复杂 AI 架构。</p></div>
+<div class="card"><h4>⑥ AI Work Queue（AI工作队列）</h4><p><strong>代表：OKKI</strong></p><p>AI 直接把客户和异常整理成“重点待跟进”“谈单中”“资料变化”等工作队列。</p></div>
+</div>
+</section><section class="subpage" id="overview-takeaways">
+<div class="section-title"><h2>本轮最重要的 8 个结论</h2></div>
+<div class="grid g2">
+<div class="card"><h4>1. “问 AI”不是核心</h4><p>真正高价值的是系统主动发现，并能把答案转成任务、CRM 更新、消息、会议和流程。</p></div>
+<div class="card"><h4>2. “为什么现在”比“客户评分”重要</h4><p>销售不只需要一个 85 分，更需要知道哪些最近变化让这个客户现在值得跟。</p></div>
+<div class="card"><h4>3. 业务事件要替代“跟进记录”成为 AI 单位</h4><p>一次会议会同时影响客户、商机、联系人、任务、预计成交日期和后续沟通。</p></div>
+<div class="card"><h4>4. Human-in-the-loop（人在回路：关键动作需人工审核） 仍是企业软件关键</h4><p>AI 可以自动判断，但对重要 CRM 字段、对外触达和关键交易动作应支持 Review（审核） / Apply（应用）。</p></div>
+<div class="card"><h4>5. 前台一个 Agent（智能体），后台多个 Skill（技能/能力单元） 更合理</h4><p>用户只表达目标，Agent（智能体） 自己判断调用检索、诊断、文档、流程还是对象操作。</p></div>
+<div class="card"><h4>6. Agent（智能体） 一旦能写数据，就必须有治理</h4><p>至少需要身份、权限、操作记录、版本、异常和人工审批边界。</p></div>
+<div class="card"><h4>7. CRM 高度自定义，业务语义层会变成底座</h4><p>Agent（智能体） 必须知道企业自己的对象、字段、阶段、指标、流程和“高价值客户”的定义。</p></div>
+<div class="card"><h4>8. 管理者 AI 不能只是报表问答</h4><p>更好的方向是主动发现目标风险、输单异常、管线问题、团队行为异常，并建议管理动作。</p></div>
+</div>
+</section><section class="subpage" id="overview-sources">
+<div class="section-title"><h2>研究说明</h2><p>内容分“官方确认”与“研究判断”。</p></div>
+<div class="grid g2">
+<div class="card"><h4>官方确认</h4><p>能力、页面入口、配置字段、执行方式、产品发布时间等，优先取自厂商官网、帮助中心、Release Notes（版本更新说明）。</p></div>
+<div class="card"><h4>研究判断</h4><p>成熟度、优缺点、产品范式、对钉钉 AI CRM 的优先级建议属于本轮研究分析，不代表厂商官方说法。</p></div>
+</div>
+</section></main><main class="page" id="page-salesforce">
+<div class="page-hero">
+<div class="kicker">竞品 01</div>
+<h1>Salesforce Agentforce Sales</h1>
+<p>Salesforce 的核心不是把 Copilot（AI副驾驶） 塞进 CRM，而是在逐步形成“数字销售劳动力”：Prospecting Agent（潜客开发智能体） 负责研究和优先级，Engagement Agents（客户互动/触达智能体） 负责培育和资格判断，Sales Management（销售管理AI） 负责销售过程与方法论，底层由 Agentforce 与 CRM/Data 体系支撑。</p>
+<div class="badges"><span class="badge blue">平台型路线</span><span class="badge green">Prospecting（潜客开发）</span><span class="badge orange">Engagement（客户互动/触达）</span><span class="badge blue">Summer '26（2026年夏季版本）</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★★</b><small>本轮最高</small></div><div class="stat"><span>核心入口</span><b>Agentforce Sales</b><small>销售工作区 + Agent（智能体）</small></div><div class="stat"><span>关键机制</span><b>Why Now（为什么现在值得跟进）</b><small>优先级必须可解释</small></div><div class="stat"><span>闭环程度</span><b>高</b><small>研究→触达→交接→推进</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="salesforce-overview" onclick="showSub('salesforce','overview')">产品定位</button><button data-sub="salesforce-ui" onclick="showSub('salesforce','ui')">关键界面</button><button data-sub="salesforce-scenarios" onclick="showSub('salesforce','scenarios')">核心场景</button><button data-sub="salesforce-journey" onclick="showSub('salesforce','journey')">完整链路</button><button data-sub="salesforce-architecture" onclick="showSub('salesforce','architecture')">Agent（智能体） 架构</button><button data-sub="salesforce-governance" onclick="showSub('salesforce','governance')">治理与控制</button><button data-sub="salesforce-judgment" onclick="showSub('salesforce','judgment')">产品判断</button><button data-sub="salesforce-sources" onclick="showSub('salesforce','sources')">证据来源</button></div><section class="subpage" id="salesforce-overview">
+<div class="section-title"><h2>产品定位</h2><p>从 Sales Cloud（Salesforce销售云） 走向 Agentforce Sales。</p></div>
+<div class="grid g3">
+<div class="card"><h4>Prospecting Agent（潜客开发智能体）</h4><p>研究 CRM signals（CRM业务信号）、Web 数据和 ZoomInfo 等第三方来源，生成按优先级排序的账户/联系人清单，并给出 <strong>Why Now（为什么现在值得跟进）</strong> 与可发送的草稿。</p></div>
+<div class="card"><h4>Engagement Agents（客户互动/触达智能体）</h4><p>Inbound（入站：客户主动进入） Lead（线索） Generation / Lead（线索） Nurturing 可以自主参与潜客培育、资格判断、会议预约，并支持 Agent（智能体） 之间自动 Handoff（交接给销售或其他智能体）。</p></div>
+<div class="card"><h4>Sales Management（销售管理AI）</h4><p>AI 不只服务一线销售，也开始进入销售方法论与管理场景：提供 deal progress（商机推进进度） / methodology suggestions（销售方法论建议），并加强对自动更新字段的控制。</p></div>
+</div>
+<div class="callout good"><b>研究判断：</b>Salesforce 的目标已经不是“更聪明的销售助手”，而是把销售链路拆成一组可协作的数字劳动力，并让管理员能逐步控制自动化范围。</div>
+</section><section class="subpage" id="salesforce-ui">
+<div class="section-title"><h2>关键界面与信息结构</h2><p>重点观察“用户先看到什么”。</p></div>
+<div class="shots">
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Agentforce / Sales 产品公开界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/pLUSGKfrw0WroLr05RsXEQv1rjwe2pxovZjogWA2eHqiTH2TaCBfQbFAKiWGPJMwNBu1q8lrdebHOlAzROnUyj7f-soltDQNu0uzwRCXyIXyAW_nVHKpQDKD9PXFtw7XfXu4lEpqUz7B7V_TXnEVvo4bXVs5F_y_1SeX1FmaGpO-k5N3sul7h18AJdifwcq4?purpose=fullsize"/>
+<figcaption><b>Agentforce / Sales 产品公开界面</b><span>公开产品界面</span></figcaption>
+</figure>
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="销售机会与 Agent 活动相关界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/0eLb4UCN7PmbkFrA5OWnMlSxozYszW1xala9l4RGhPI00JMYeJYwz2_hIfbXYXymQNpOaPmU2tw1dRLGYkNX-A642FmM_hHCH4nPhijw2qbnUhFJq44ARckpxex8_ISFy_gaKutT_Tz9Lf7QzVZjqE7psdBfPUN0OQ1fXc7W1SQO929U3jwypDNnmmsg39QH?purpose=fullsize"/>
+<figcaption><b>销售机会与 Agent（智能体） 活动相关界面</b><span>公开产品界面</span></figcaption>
+</figure>
+</div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>列表层：AI 先帮用户排序</h4><p>理想信息结构不是普通客户列表，而是 Account / Contact + Fit（匹配度） + Signal（业务信号） + Why Now（为什么现在值得跟进）。销售的第一步从“筛选”变成“审核 AI 推荐”。</p><ul class="check"><li>高优先级客户</li><li>Fit（匹配度） / Signal Score（客户信号强度评分）</li><li>Why Now（为什么现在值得跟进）</li><li>推荐联系人</li><li>Draft message（AI生成的沟通草稿）</li></ul></div>
+<div class="card"><h4>详情层：解释与行动放在一起</h4><p>点击客户后，应同时呈现触发信号、历史关系、AI 判断与下一步动作；不是把“洞察”与“执行”分成两个产品。</p><ul class="check"><li>Review（审核）</li><li>Approve（批准）</li><li>加入 cadence（销售触达节奏）</li><li>交给 Agent（智能体）</li><li>Reject / Edit（拒绝 / 编辑）</li></ul></div>
+</div>
+</section><section class="subpage" id="salesforce-scenarios">
+<div class="section-title"><h2>核心 AI 场景</h2></div>
+<table class="compare">
+<thead><tr><th>场景</th><th>AI 输入</th><th>AI 输出</th><th>用户价值</th></tr></thead>
+<tbody>
+<tr><td>Prospecting（潜客开发）</td><td>CRM、Web、第三方数据</td><td>优先客户、Why Now（为什么现在值得跟进）、Draft</td><td>减少找客户和研究时间</td></tr>
+<tr><td>Lead（线索） Nurturing</td><td>潜客互动、邮件、资格条件</td><td>自动培育、回答、会议预约</td><td>减少线索沉默</td></tr>
+<tr><td>Agent Handoff（智能体/人员交接）</td><td>Lead（线索） 状态、Agent（智能体） 处理结果</td><td>从 Inbound（入站：客户主动进入） Agent（智能体） 自动交给 Nurturing Agent（智能体）</td><td>保证连续跟进</td></tr>
+<tr><td>Manual Review（人工审核）</td><td>Agent（智能体） 生成的触达内容</td><td>人工审核策略</td><td>在自动化与风险之间平衡</td></tr>
+<tr><td>Sales Management（销售管理AI）</td><td>Deal（商机） 进展、销售方法论</td><td>方法论建议、推进提醒</td><td>管理者不只看报表</td></tr>
+</tbody></table>
+</section><section class="subpage" id="salesforce-journey">
+<div class="section-title"><h2>完整业务链路：从发现到 Handoff（交接给销售或其他智能体）</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>持续研究</b><span>夜间/持续读取 CRM signals（CRM业务信号）、Web 与第三方数据。</span></div><div class="flow-step"><i>2</i><b>形成 Ranked List（按优先级排序的名单）</b><span>每天把值得优先联系的账户与联系人交给销售。</span></div><div class="flow-step"><i>3</i><b>解释 Why Now（为什么现在值得跟进）</b><span>把融资、招聘、技术栈变化、互动等信号转成人可理解的理由。</span></div><div class="flow-step"><i>4</i><b>生成触达</b><span>自动准备个性化草稿；管理员可控制审核级别。</span></div><div class="flow-step"><i>5</i><b>Agent Engagement（智能体持续互动）</b><span>Agent（智能体） 可以继续回答问题、资格判断、预约会议。</span></div><div class="flow-step"><i>6</i><b>Agent（智能体） / 人 Handoff（交接给销售或其他智能体）</b><span>潜客在不同 Agent（智能体） 或销售人员之间完成交接。</span></div><div class="flow-step"><i>7</i><b>CRM 回写</b><span>结果持续沉淀回 Sales CRM（销售CRM），成为下一轮判断的数据。</span></div></div>
+<div class="callout"><b>关键产品思想：</b>销售不再从“打开 CRM → 找客户 → 查资料 → 想理由 → 写邮件”开始，而是从“Review（审核） AI 推荐 → 决定是否执行”开始。</div>
+</section><section class="subpage" id="salesforce-architecture">
+<div class="section-title"><h2>Agent（智能体） 架构理解</h2></div>
+<div class="arch">Agentforce Sales
+│
+├─ Prospecting Agent（潜客开发智能体）
+│   ├─ CRM signal research（CRM业务信号研究）
+│   ├─ Web / external data（网页与外部数据）
+│   ├─ Ranking（优先级排序） &amp; Why Now（为什么现在值得跟进）
+│   └─ Draft outreach（AI生成的外联草稿）
+│
+├─ Inbound Lead Generation Agent（入站线索生成智能体）
+│
+├─ Lead Nurturing（线索培育） Agent（线索培育智能体）
+│   ├─ Engagement（客户互动/触达）
+│   ├─ Qualification（资格判断）
+│   └─ Meeting booking（预约会议）
+│
+├─ Agent Handoff（智能体/人员交接）
+│
+└─ Sales Management（销售管理AI）
+    ├─ Deal（商机） progress
+    ├─ Methodology suggestions（销售方法论建议）
+    └─ Autonomous-update controls（自主更新控制）</div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>配置正在“产品化”</h4><p>2026 年 Prospecting Agent（潜客开发智能体） 增加 Guided Config（向导式配置）、Natural Language Editor（自然语言配置编辑器）、实时 Preview（预览），说明 Salesforce 正在降低 Agent Builder（智能体搭建器） 的管理员门槛。</p></div>
+<div class="card"><h4>外部数据可插拔</h4><p>Summer ’26（2026年夏季版本） Release Notes（版本更新说明） 明确加入 Prospecting Agent（潜客开发智能体） 的 external data（外部数据） vendor（外部数据供应商） 支持，未来 Agent（智能体） 的竞争力越来越依赖“CRM 内部数据 + 外部实时信号”。</p></div>
+</div>
+</section><section class="subpage" id="salesforce-governance">
+<div class="section-title"><h2>治理与控制</h2></div>
+<div class="grid g3">
+<div class="card"><h4>人工审核强度</h4><p>Lead（线索） Nurturing Email（邮件） 的 manual review 继续加强，说明外发动作仍需可配置的人审边界。</p></div>
+<div class="card"><h4>版本机制</h4><p>Inbound（入站：客户主动进入） / Lead Nurturing（线索培育） Agent（线索培育智能体） 行为可通过新版本继续编辑与生效，避免直接修改生产 Agent（智能体）。</p></div>
+<div class="card"><h4>字段更新控制</h4><p>Sales Management（销售管理AI） 方向中出现“控制哪些字段可自主更新”的治理思路，适合企业级 CRM。</p></div>
+</div>
+<div class="callout warn"><b>对钉钉 AI CRM 的启发：</b>重要的是“不同动作不同风险级别”。读取和总结可以自动；改阶段、发外部邮件、创建合同等动作应有不同的授权与审核策略。</div>
+</section><section class="subpage" id="salesforce-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>销售 AI 覆盖链路最完整</li><li>Why Now（为什么现在值得跟进） 把 AI 判断做成可解释产品</li><li>外部数据、Agent Handoff（智能体/人员交接）、管理能力都开始产品化</li><li>逐步完善人工审核与自动更新边界</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>体系复杂，管理员理解成本高</li><li>多产品组合意味着配置、数据与治理依赖较重</li><li>对中小 CRM 来说不能直接复制其平台复杂度</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>“Why Now（为什么现在值得跟进） + Next Best Action（下一步最佳行动建议） + 直接执行入口”应该成为首页 AI 建议卡的标准结构。</div>
+</section><section class="subpage" id="salesforce-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://www.salesforce.com/sales/latest-release/" target="_blank"><span>Agentforce Sales product releases（产品更新）</span><em>官方资料</em></a>
+<a class="source" href="https://help.salesforce.com/s/articleView?id=release-notes.rn_sales.htm&amp;language=en_US&amp;type=5" target="_blank"><span>Salesforce Summer ’26（2026年夏季版本） Sales Release Notes（版本更新说明）</span><em>官方资料</em></a>
+<a class="source" href="https://help.salesforce.com/s/articleView?id=release-notes.rn_sales_agents_sdr.htm&amp;language=en_US&amp;type=5" target="_blank"><span>Agentforce Engagement（客户互动/触达） Release Notes（版本更新说明）</span><em>官方资料</em></a>
+<a class="source" href="https://help.salesforce.com/" target="_blank"><span>Salesforce Help（Salesforce帮助中心）</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-hubspot">
+<div class="page-hero">
+<div class="kicker">竞品 02</div>
+<h1>HubSpot Breeze / Smart Deal Progression（智能商机推进）</h1>
+<p>HubSpot 最值得学的不是 Agent（智能体） 数量，而是产品化：Prospecting Agent（潜客开发智能体） 负责把信号变成潜客与触达；Smart Deal Progression（智能商机推进） 则把一次会议转成 CRM 更新、任务、跟进邮件和下一步行动，让 AI 真正嵌入销售事件。</p>
+<div class="badges"><span class="badge blue">场景嵌入</span><span class="badge green">Prospecting Agent（潜客开发智能体）</span><span class="badge orange">Smart Deal Progression（智能商机推进）</span><span class="badge blue">Spring 2026（2026年春季版本）</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★☆</b><small>产品化非常强</small></div><div class="stat"><span>最佳体验</span><b>业务事件后</b><small>AI 不抢业务主界面</small></div><div class="stat"><span>核心数据</span><b>Growth Context（增长业务上下文）</b><small>完整客户上下文</small></div><div class="stat"><span>商业化</span><b>Outcome（结果交付） / Credits（AI点数/使用额度）</b><small>AI 价值直接计量</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="hubspot-overview" onclick="showSub('hubspot','overview')">产品定位</button><button data-sub="hubspot-ui" onclick="showSub('hubspot','ui')">关键界面</button><button data-sub="hubspot-prospecting" onclick="showSub('hubspot','prospecting')">Prospecting（潜客开发）</button><button data-sub="hubspot-deal" onclick="showSub('hubspot','deal')">Smart Deal（商机）</button><button data-sub="hubspot-journey" onclick="showSub('hubspot','journey')">完整链路</button><button data-sub="hubspot-productization" onclick="showSub('hubspot','productization')">产品化机制</button><button data-sub="hubspot-judgment" onclick="showSub('hubspot','judgment')">产品判断</button><button data-sub="hubspot-sources" onclick="showSub('hubspot','sources')">证据来源</button></div><section class="subpage" id="hubspot-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>Prospecting Agent（潜客开发智能体）</h4><p>监控 buying signals、CRM 历史与站内活动，识别 ready-to-buy accounts（高购买意向企业），并寻找 buying committee（客户购买决策组/决策链）、生成个性化外联。</p></div>
+<div class="card"><h4>Smart Deal Progression（智能商机推进）</h4><p>会后读取 transcript（转录文本） + full deal history（完整商机历史） + emails（邮件） + notes（备注） + pipeline definition（销售管线阶段定义），生成 CRM 更新建议、follow-up email（会后跟进邮件） 与 action items（待办行动项）。</p></div>
+<div class="card"><h4>Context Advantage（上下文优势）</h4><p>HubSpot 反复强调 AI 的差异不是“有数据”，而是有完整 Growth Context（增长业务上下文）：客户、互动、业务历史与团队上下文。</p></div>
+</div>
+<div class="callout good"><b>核心产品思想：</b>AI 不需要占据 CRM 首页。更好的方式是：当用户完成一次会议、一次通话、一次商机推进后，AI 恰好在那个节点出现，把“发生了什么”转换成“系统应该变成什么”。</div>
+</section><section class="subpage" id="hubspot-ui">
+<div class="section-title"><h2>关键界面</h2><p>真实公开产品界面。</p></div>
+<div class="shots">
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="HubSpot Breeze / Prospecting Agent 相关界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/GafKC8p4_4YjAllYS6iYbLJ3RnJ1sNP-AL8ugAWic_0blwKgPacO1qjM_plUePSycxJk72CE-eJgLzX_F83Av2zJCadGYX1Sjnam6EPDBe38rThZlGltXgbvX-5zPsHzKEbQVQj7mLtWXJZQNbj8yE_FvHTG49NrGFykejGKREkgaY3W29cJYlNC96cgBEDV?purpose=fullsize"/>
+<figcaption><b>HubSpot Breeze / Prospecting Agent（潜客开发智能体） 相关界面</b><span>公开产品界面</span></figcaption>
+</figure>
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Prospecting / 销售工作区界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/I1n3YZ-SWAxK0-ppKsvaRVUVafRdNrwgLlIVXDBPh4VvL2Jy09SCdNNhQBcnfMbbmM8B0kdzMiyrbowCZkUtd-y5cZn0d3UzWxFB84TafHFiStbCyfCJZQ3rvT1RcZeLTEacaZAuyCeViTw36c5B3R22qfNAomdgf-VorLk0o35tnR3jdQZ9jZEcKnILf6IB?purpose=fullsize"/>
+<figcaption><b>Prospecting（潜客开发） / 销售工作区界面</b><span>公开产品界面</span></figcaption>
+</figure>
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Smart Deal / AI 销售辅助界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/VpU2DChEAZp565gJoDL1r2HK4tsryFlbAGBzWd0hs-PD_XAkTJ8h5bZHs_Prk4B9hWtjTXK47xcSRRyOq7mV5wdbHG8G95iZLWA71NAZUnCKpVXcE-o6SR4VvbI7HTN6dyjqZtX1SORT4a5rVOcU9GaWSNdku4Ci2fW_bwBshNGvY_HFFJcC2_WJwvL9h_OV?purpose=fullsize"/>
+<figcaption><b>Smart Deal（商机） / AI 销售辅助界面</b><span>公开产品界面</span></figcaption>
+</figure>
+</div>
+<div class="callout"><b>观察：</b>HubSpot 的 AI UI 基本遵循现有 Sales Workspace（销售工作台） 的卡片、drawer（侧滑抽屉）、meeting detail（会议详情页） 和 CRM property（CRM字段） 结构，不要求用户切换到一个全新的“AI 世界”。</div>
+</section><section class="subpage" id="hubspot-prospecting">
+<div class="section-title"><h2>Prospecting Agent（潜客开发智能体）</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>配置 Selling Profile（销售策略画像配置）</b><span>明确卖什么、目标客户、价值主张、语气与 Agent（智能体） 身份。</span></div><div class="flow-step"><i>2</i><b>监控 Buying（购买） Signals（购买信号）</b><span>Job posting、funding（融资动态）、technology adoption（技术采用情况）、form fill（表单提交行为）、site activity（网站访问行为） 等。</span></div><div class="flow-step"><i>3</i><b>筛出高优先级账户</b><span>从已有 CRM 和新发现的 in-market company（处于采购窗口的企业） 中找机会。</span></div><div class="flow-step"><i>4</i><b>补齐 Buying（购买） Committee（客户购买决策组/决策链）</b><span>寻找符合 persona（目标联系人角色画像） 的联系人，并可借助第三方 provider（第三方数据服务商） 补全。</span></div><div class="flow-step"><i>5</i><b>生成个性化 Outreach（客户外联/主动触达）</b><span>根据真实信号、公司研究和历史上下文写邮件。</span></div><div class="flow-step"><i>6</i><b>Review &amp; Send（审核后发送）</b><span>销售审核后发送；把人保留在关键外发动作上。</span></div></div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>为什么比“AI 写邮件”高级</h4><p>邮件只是最后一步。真正价值在前面的“识别机会 → 找对人 → 找到理由 → 再生成内容”。</p></div>
+<div class="card"><h4>商业化信号</h4><p>Spring 2026（2026年春季版本） Prospecting Agent（潜客开发智能体） 采用按 recommended lead（AI推荐线索） 收费的方式，说明 HubSpot 把 Agent（智能体） 价值从“功能使用”往“结果交付”转。</p></div>
+</div>
+</section><section class="subpage" id="hubspot-deal">
+<div class="section-title"><h2>Smart Deal Progression（智能商机推进）：本轮最值得直接借鉴</h2></div>
+<div class="grid g2">
+<div class="card"><h4>输入不是一段录音</h4><p>官方明确说明会综合 meeting/call transcript（会议/通话转录文本）、related deal information（相关商机信息）、past emails（历史邮件）、notes（备注）、deal activity（商机活动） 和完整历史，而不是只总结“最后一次对话”。</p></div>
+<div class="card"><h4>输出不是一段摘要</h4><p>AI 可以提出默认/自定义 CRM Property 修改、生成 follow-up email（会后跟进邮件）、提取 high-value（高价值） next steps（高价值下一步行动），并支持用户 review / apply。</p></div>
+</div>
+<div class="arch">Business Event（业务事件）: 一次会议
+│
+├─ Transcript / Call content（转录文本/通话内容）
+├─ Deal（商机） history
+├─ Email（邮件）s / Notes（备注）
+├─ Pipeline definition（销售管线阶段定义）
+└─ Forecast logic（销售预测逻辑）
+      ↓
+AI理解业务变化
+      ↓
+├─ CRM Property Suggestions（CRM字段修改建议）
+├─ Action Items（待办行动项）
+├─ Follow-up Email（会后跟进邮件）
+└─ Next Best Action（下一步最佳行动建议）
+      ↓
+Sales Review / Apply（销售审核并应用）
+      ↓
+CRM更新 + Task（任务） + Email（邮件）</div>
+<div class="callout good"><b>对钉钉 AI CRM：</b>“AI 整理跟进”应该升级成“AI 业务事件处理”。一次拜访可以同时修改跟进记录、商机阶段、预计成交日期、决策人和待办。</div>
+</section><section class="subpage" id="hubspot-journey">
+<div class="section-title"><h2>完整业务链路</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>会前</b><span>系统准备客户、商机、参与人、历史互动与待确认事项。</span></div><div class="flow-step"><i>2</i><b>会议发生</b><span>通过 Meeting / Call（会议/通话） 获得 transcript（转录文本） 与事件信息。</span></div><div class="flow-step"><i>3</i><b>会后理解</b><span>AI 将本次内容与完整 deal context（商机业务上下文） 合并分析。</span></div><div class="flow-step"><i>4</i><b>提出变化</b><span>列出 action items（待办行动项） 与 CRM property suggestions（CRM字段修改建议）。</span></div><div class="flow-step"><i>5</i><b>用户确认</b><span>销售可以逐项 Review（审核） 或批量 Apply（应用）。</span></div><div class="flow-step"><i>6</i><b>自动跟进</b><span>生成 follow-up email（会后跟进邮件），任务可直接落 CRM。</span></div><div class="flow-step"><i>7</i><b>持续推进</b><span>新的 CRM 状态成为下一次预测与 AI 判断的上下文。</span></div></div>
+</section><section class="subpage" id="hubspot-productization">
+<div class="section-title"><h2>为什么 HubSpot 的产品化值得学</h2></div>
+<div class="grid g3">
+<div class="card"><h4>1. AI 不改变用户心智</h4><p>用户仍然是在“会议”“商机”“销售工作区”里工作，只是 AI 自动多做一步。</p></div>
+<div class="card"><h4>2. 用 Context（业务上下文） 而不是 Prompt（提示词） 做壁垒</h4><p>HubSpot 的论点是“AI 知道客户和业务上下文”，这比通用问答更符合 CRM 的数据优势。</p></div>
+<div class="card"><h4>3. 把 AI 消耗计量化</h4><p>Custom property smart data capture（自定义字段智能数据采集） 等功能开始使用 Credits（AI点数/使用额度），企业能更明确衡量 AI 使用成本。</p></div>
+</div>
+</section><section class="subpage" id="hubspot-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>普通销售几乎不需要学习 Agent（智能体） 概念</li><li>业务事件处理非常贴合 CRM 真实痛点</li><li>Prospecting（潜客开发） 与 Deal（商机） Progression 前后链路衔接自然</li><li>Human Review（审核） 设计成熟</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>部分 2026 能力仍处于 Beta（测试阶段） / 渐进开放</li><li>相比 Salesforce / Zoho，Agent（智能体） 平台治理不是主卖点</li><li>Credits（AI点数/使用额度） / 结果计费会让复杂企业关注 AI 成本模型</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>优先做 AI Event（AI业务事件处理），而不是优先做大而全的 Agent Builder（智能体搭建器）。</div>
+</section><section class="subpage" id="hubspot-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://www.hubspot.com/spotlight" target="_blank"><span>HubSpot Spring 2026（2026年春季版本） Spotlight</span><em>官方资料</em></a>
+<a class="source" href="https://www.hubspot.com/products/sales/smart-deal-progression" target="_blank"><span>Smart Deal Progression（智能商机推进） 产品页</span><em>官方资料</em></a>
+<a class="source" href="https://knowledge.hubspot.com/meetings-tool/review-recommended-next-steps-for-deals" target="_blank"><span>Review（审核） recommended next steps for deals</span><em>官方资料</em></a>
+<a class="source" href="https://knowledge.hubspot.com/prospecting/use-the-prospecting-agent" target="_blank"><span>Prospecting Agent（潜客开发智能体） Help</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-microsoft">
+<div class="page-hero">
+<div class="kicker">竞品 03</div>
+<h1>Microsoft Dynamics 365 Sales AI Agents</h1>
+<p>Microsoft 的优势是两层：前台让 Sales Agent（智能体） 跟着用户进入 CRM、Outlook、Teams 和 Microsoft 365；后台则把 Sales Qualification Agent（销售线索资格判断智能体） 做成一套企业可配置、可模拟、可监控、可 Handoff（交接给销售或其他智能体） 的业务 Agent（智能体）。</p>
+<div class="badges"><span class="badge blue">AI Sidecar（侧边伴随式AI助手）</span><span class="badge green">Sales Qualification（资格判断）</span><span class="badge orange">Opportunity（商机） Agent（智能体）</span><span class="badge blue">M365 Context（业务上下文）</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★☆</b><small>企业集成能力很强</small></div><div class="stat"><span>自动化模式</span><b>2 类</b><small>Research（研究） / Research+Engage（研究并自动触达）</small></div><div class="stat"><span>管理入口</span><b>Dynamics 365 AI Hub（Dynamics 365 AI管理中心）</b><small>集中管理 Agent（智能体）</small></div><div class="stat"><span>交接机制</span><b>明确</b><small>Processed（已处理） / Handoff（交接给销售或其他智能体） / Disqualified（已淘汰/不合格）</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="microsoft-overview" onclick="showSub('microsoft','overview')">产品定位</button><button data-sub="microsoft-ui" onclick="showSub('microsoft','ui')">关键界面</button><button data-sub="microsoft-qualification" onclick="showSub('microsoft','qualification')">Qualification（资格判断） Agent（智能体）</button><button data-sub="microsoft-opportunity" onclick="showSub('microsoft','opportunity')">Opportunity（商机） Agent（智能体）</button><button data-sub="microsoft-journey" onclick="showSub('microsoft','journey')">完整链路</button><button data-sub="microsoft-admin" onclick="showSub('microsoft','admin')">管理员体验</button><button data-sub="microsoft-judgment" onclick="showSub('microsoft','judgment')">产品判断</button><button data-sub="microsoft-sources" onclick="showSub('microsoft','sources')">证据来源</button></div><section class="subpage" id="microsoft-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>Sales Qualification Agent（销售线索资格判断智能体）</h4><p>解决大量 Inbound（入站：客户主动进入） Leads 无人及时研究的问题；支持 Research-only（仅研究，不自动触达） 和 Research + Engage（研究并自动触达） 两个自动化级别。</p></div>
+<div class="card"><h4>Sales Opportunity Agent（销售商机智能体）</h4><p>融合 CRM 更新、Email（邮件） thread、Meeting intelligence（会议智能信息） 与实时 Web Research（研究），给出机会优先级、风险和可操作建议。</p></div>
+<div class="card"><h4>M365 Copilot（AI副驾驶） 路线</h4><p>销售 AI 不要求用户一直在 Dynamics 中，CRM 上下文可以进入 Outlook、Teams 和 Copilot（AI副驾驶） 工作环境。</p></div>
+</div>
+</section><section class="subpage" id="microsoft-ui">
+<div class="section-title"><h2>关键界面</h2></div>
+<div class="shots">
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Dynamics 365 / Sales Agent 公开界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/XAUl9K1wkmRz4rj6Qv84wcS9Pwoex8Bzai8qTMqEmu_VNXR3Hw5cIypBjPoqih36h6fijtEEhVTntJo7lGASiW76VPAxs1sl64tF_TcdHLAGwWCGGsTaNb7SYYGTFtlvdVQtby4eQGpnFj8TKDxwO73kC0NN55ixdFCvsUdSu_sMXtxVR8e0XFB4RL9vNyHS?purpose=fullsize"/>
+<figcaption><b>Dynamics 365 / Sales Agent（智能体） 公开界面</b><span>公开产品界面</span></figcaption>
+</figure>
+</div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>前台：Agent-specific Views（Agent专属处理视图）</h4><p>Sales Hub（销售工作台） 默认提供 Leads from AI Agent（智能体）、being processed（处理中）、handed over（已移交）、disqualified（已淘汰/不合格） 等视图，AI 工作不是黑盒。</p></div>
+<div class="card"><h4>后台：AI Hub（AI管理中心）</h4><p>管理员从 Dynamics 365 AI Hub（Dynamics 365 AI管理中心） 创建 Agent（智能体），选择 automation level（自动化等级），再进入 company profile（企业画像）、selection criteria（筛选条件）、research、outreach（外联/主动触达）、assessment（资格评估） 等步骤。</p></div>
+</div>
+</section><section class="subpage" id="microsoft-qualification">
+<div class="section-title"><h2>Sales Qualification Agent（销售线索资格判断智能体）</h2></div>
+<table class="compare">
+<thead><tr><th>模式</th><th>Agent（智能体） 做什么</th><th>适合企业</th><th>风险级别</th></tr></thead>
+<tbody>
+<tr><td><b>Research-only（仅研究，不自动触达）</b></td><td>研究潜客、评估 target customer profile fit</td><td>先把 AI 用于内部判断</td><td>较低</td></tr>
+<tr><td><b>Research + Engage（研究并自动触达）</b></td><td>研究 + 邮件触达 + BANT（预算、决策权、需求、时间四项资格判断） / Purchase Interest（购买意向） + Handoff（交接给销售或其他智能体）</td><td>希望 Agent（智能体） 参与前端培育</td><td>较高，需要邮箱、同步、邮件策略</td></tr>
+</tbody></table>
+<div class="callout"><b>重要：</b>Microsoft 没有把“自主 Agent（智能体）”当成单一开关，而是允许企业选择自动化层级。这非常适合企业 CRM 的渐进式 AI 上线。</div>
+</section><section class="subpage" id="microsoft-opportunity">
+<div class="section-title"><h2>Sales Opportunity Agent（销售商机智能体）</h2></div>
+<div class="grid g3">
+<div class="card"><h4>数据整合</h4><p>CRM updates + Email（邮件） threads + Meeting intelligence（会议智能信息） + real-time web research（实时网页研究）。</p></div>
+<div class="card"><h4>核心输出</h4><p>识别 high-value（高价值） / at-risk opportunities（高风险商机），检测 stakeholder disengagement（关键干系人参与度下降）、momentum slowing（推进动能减弱）、competitive pressure（竞争压力）。</p></div>
+<div class="card"><h4>产品目的</h4><p>让销售更快知道哪个机会需要介入，以及针对风险应该采取什么行动。</p></div>
+</div>
+<div class="arch">Opportunity（商机）
+   ↓
+CRM + M365 Email（邮件） + Meetings + Web
+   ↓
+Research（研究） / Stakeholder（关键干系人） / Competitor（竞争对手） Context（业务上下文）
+   ↓
+Risk Detection（风险识别） + Prioritization（优先级排序）
+   ↓
+Recommended Actions（推荐行动）
+   ↓
+Seller Action（执行动作）</div>
+</section><section class="subpage" id="microsoft-journey">
+<div class="section-title"><h2>Qualification（资格判断） 完整业务链路</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>Lead（线索） 进入</b><span>来自网站、Event（活动）、Webinar（线上研讨会） 等 inbound 来源。</span></div><div class="flow-step"><i>2</i><b>Selection Criteria（筛选条件）</b><span>Agent（智能体） 只处理符合管理员设定条件的 Lead（线索）。</span></div><div class="flow-step"><i>3</i><b>Research（研究）</b><span>研究企业、联系人、Target Customer Profile Fit（目标客户画像匹配度）。</span></div><div class="flow-step"><i>4</i><b>Engage（主动触达）（可选）</b><span>用 Shared Mailbox（共享邮箱） 发送/跟进邮件。</span></div><div class="flow-step"><i>5</i><b>Assess（评估）</b><span>结合 Purchase Interest（购买意向） / BANT（预算、决策权、需求、时间四项资格判断） 等判断 readiness（销售成熟度/是否可移交）。</span></div><div class="flow-step"><i>6</i><b>Handoff（交接给销售或其他智能体） / Disqualify（判定为不合格）</b><span>合格后按 Assignment Rule（分配规则） 交销售；不合格进入独立视图。</span></div><div class="flow-step"><i>7</i><b>Monitor（监控）</b><span>管理员持续查看 Agent（智能体） 处理情况并调参。</span></div></div>
+</section><section class="subpage" id="microsoft-admin">
+<div class="section-title"><h2>管理员体验：比前台更值得研究</h2></div>
+<div class="grid g2">
+<div class="card"><h4>配置顺序</h4><ul class="check"><li>General information（基础信息） / Company &amp; Products（公司与产品）</li><li>Lead selection criteria（线索筛选条件）</li><li>Email（邮件） instructions / custom outreach（自定义外联策略）</li><li>Handoff（交接给销售或其他智能体） criteria</li><li>Assignment rules（分配规则）</li><li>Knowledge sources（知识来源）</li><li>Simulation（模拟运行）</li></ul></div>
+<div class="card"><h4>技术与治理前置条件</h4><ul class="check"><li>Azure app（Azure应用）</li><li>Dataverse app user（Dataverse应用用户） / AI Salesperson role（AI销售员角色）</li><li>Research+Engage（研究并自动触达） 需要 Shared Mailbox（共享邮箱）</li><li>Server-side synchronization</li><li>Seller permissions</li></ul></div>
+</div>
+<div class="callout warn"><b>启发：</b>未来钉钉 AI CRM 的 Agent（智能体） 配置应该把“业务配置”和“安全/连接配置”分层。普通 CRM 管理员不应该被技术前置条件淹没。</div>
+</section><section class="subpage" id="microsoft-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>Agent（智能体） 生命周期与企业配置非常完整</li><li>Research-only（仅研究，不自动触达） → Engage（主动触达） 的渐进式自动化很合理</li><li>AI 处理状态通过独立 View 可观察</li><li>M365 上下文是强大差异化</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>部署前置条件多，技术与权限配置复杂</li><li>多产品许可证和生态依赖较重</li><li>对轻量 CRM 用户可能显得过度工程化</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>Agent（智能体） 的“处理对象 + 自动化等级 + Handoff（交接给销售或其他智能体） + 独立状态视图”。</div>
+</section><section class="subpage" id="microsoft-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://learn.microsoft.com/en-us/dynamics365/sales/sales-qualification-agent" target="_blank"><span>Sales Qualification Agent（销售线索资格判断智能体） overview</span><em>官方资料</em></a>
+<a class="source" href="https://learn.microsoft.com/en-us/dynamics365/sales/configure-sales-qualification-agent" target="_blank"><span>Configure Sales Qualification Agent（销售线索资格判断智能体）</span><em>官方资料</em></a>
+<a class="source" href="https://learn.microsoft.com/en-us/dynamics365/sales/start-sales-qualification-agent" target="_blank"><span>Start Sales Qualification Agent（销售线索资格判断智能体）</span><em>官方资料</em></a>
+<a class="source" href="https://learn.microsoft.com/en-us/dynamics365/sales/sales-opportunity-agent" target="_blank"><span>Sales Opportunity Agent（销售商机智能体） overview</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-zoho">
+<div class="page-hero">
+<div class="kicker">竞品 04</div>
+<h1>Zoho CRM · Zia Agents</h1>
+<p>Zoho 把 Agent（智能体） 做得最像“企业数字员工”：Agent（智能体） 不只会回答，还能通过 tools 执行动作；部署后可以获得独立姓名、@ziaagent.ai 邮箱、Role（角色）、Profile（权限配置档案），甚至成为 Record Owner（CRM记录负责人），并进入 Views（视图）、Reports（报表）、Dashboard（仪表盘）s 和 Audit（审计记录） 体系。</p>
+<div class="badges"><span class="badge blue">Digital Employee（数字员工）</span><span class="badge green">Agent Studio（智能体搭建与管理台）</span><span class="badge orange">Agent Store（智能体商店）</span><span class="badge blue">Identity &amp; Audit（审计记录）</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★☆</b><small>Agent（智能体） 企业化很强</small></div><div class="stat"><span>创建方式</span><b>2 种</b><small>From Scratch（从零创建） / Zia AI（Zoho内置AI）</small></div><div class="stat"><span>部署方式</span><b>2 种</b><small>Connection / Digital Employee（数字员工）</small></div><div class="stat"><span>治理</span><b>完整</b><small>Role（角色） / Profile（权限配置档案） / Audit（审计记录） / Version</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="zoho-overview" onclick="showSub('zoho','overview')">产品定位</button><button data-sub="zoho-ui" onclick="showSub('zoho','ui')">关键界面</button><button data-sub="zoho-build" onclick="showSub('zoho','build')">创建与测试</button><button data-sub="zoho-deploy" onclick="showSub('zoho','deploy')">部署与身份</button><button data-sub="zoho-trigger" onclick="showSub('zoho','trigger')">触发与执行</button><button data-sub="zoho-lifecycle" onclick="showSub('zoho','lifecycle')">生命周期</button><button data-sub="zoho-judgment" onclick="showSub('zoho','judgment')">产品判断</button><button data-sub="zoho-sources" onclick="showSub('zoho','sources')">证据来源</button></div><section class="subpage" id="zoho-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>Agent Studio（智能体搭建与管理台）</h4><p>创建 Agent（智能体） 时定义 Role（角色）、Instructions、Knowledge Base（知识库）、Tools（可调用工具）、Connections、Guardrails（安全边界/约束规则），并支持 Zia AI（Zoho内置AI） 自动帮管理员生成 Agent（智能体） 配置。</p></div>
+<div class="card"><h4>Agent Store（智能体商店）</h4><p>企业不一定从零创建，可以直接 hire 预置 Agent（智能体）；这是未来 Agent（智能体） Marketplace 的产品雏形。</p></div>
+<div class="card"><h4>Digital Employee（数字员工）</h4><p>部署为数字员工后，Agent（智能体） 拥有自己的 CRM Identity、Role（角色）、Profile（权限配置档案）、Email（邮件） 与 Audit（审计记录） 记录。</p></div>
+</div>
+</section><section class="subpage" id="zoho-ui">
+<div class="section-title"><h2>关键界面</h2></div>
+<div class="shots">
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Zoho Zia Agents / Agent Studio 相关界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/WFg6HjSok0H0FFvBkrRMHK-FZb_xxWLO3UXXbgKAj4CgyKKvqZNdB_n1UMt6Lz0liCjnqeRNDr7TpFHqhF_ndzp0tQ-8UrU8rDLPsqRdVbm0dnziqKisllyO7h2eUZXaWDEC6eMsUVpm71Gv7SWnF3usO-7ne4Mgoe3VCS_bmEqxH1N0ZjSaWXLey1N446O3?purpose=fullsize"/>
+<figcaption><b>Zoho Zia Agents / Agent Studio（智能体搭建与管理台） 相关界面</b><span>公开产品界面</span></figcaption>
+</figure>
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="Zia Agent Marketplace / 角色化 Agent 界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/9lZMJbx9gV9GdUKpgeeGEozVHhbtRJgNgTwlJAd3sW8vk6zzONLRp5sihp4rIBrKYCuGZLGXz8tkPoD2S9KcqROignaWmwZRUrluNoWogDV4JmbpoLnBtJxY18_mnW-4DrdokKyhAxzAwn129bDpipIJILcBX9Dxg3z4VpBslfw0tcwEy5L6oPtF5OimK8IC?purpose=fullsize"/>
+<figcaption><b>Zia Agent（智能体） Marketplace / 角色化 Agent（智能体） 界面</b><span>公开产品界面</span></figcaption>
+</figure>
+</div>
+</section><section class="subpage" id="zoho-build">
+<div class="section-title"><h2>创建与测试</h2></div>
+<div class="grid g2">
+<div class="card"><h4>Create From Scratch（从零创建）</h4><ul class="check"><li>Agent（智能体） Name / Description</li><li>Vendor / Model（模型）</li><li>Role（角色）</li><li>Instructions</li><li>Knowledge Base（知识库）</li><li>Tools（可调用工具）</li><li>Additional Settings / Guardrails（安全边界/约束规则）</li></ul></div>
+<div class="card"><h4>Create with Zia AI（Zoho内置AI）</h4><p>管理员用自然语言描述 Agent（智能体） 的角色和责任，Zia 自动生成模型、描述、角色、Instructions、Knowledge 与 Tools（可调用工具），再由管理员 review。</p><p>这比让管理员从“空白 Prompt（提示词）”开始更产品化。</p></div>
+</div>
+</section><section class="subpage" id="zoho-deploy">
+<div class="section-title"><h2>部署方式与身份模型</h2></div>
+<table class="compare">
+<thead><tr><th>方式</th><th>身份</th><th>操作记录</th><th>适合场景</th></tr></thead>
+<tbody>
+<tr><td>Deploy using Connection</td><td>使用部署人的连接身份</td><td>动作记录在部署用户下</td><td>快速试用、低风险 Agent（智能体）</td></tr>
+<tr><td><b>Deploy as Digital Employee（数字员工）</b></td><td>独立 First/Last Name + @ziaagent.ai + Role（角色） + Profile（权限配置档案）</td><td>动作全部记录在 Agent（智能体） 自己名下</td><td>长期、自主、需要明确审计责任的 Agent（智能体）</td></tr>
+</tbody></table>
+<div class="callout good"><b>关键：</b>Zoho 把“AI 到底以谁的身份改 CRM”这个企业级问题做成了产品能力，而不是一句模糊的“由 AI 执行”。</div>
+</section><section class="subpage" id="zoho-trigger">
+<div class="section-title"><h2>触发与执行机制</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>选择 CRM Module</b><span>Lead（线索）、Contact、Deal（商机） 等对象。</span></div><div class="flow-step"><i>2</i><b>Activation Condition（智能体触发条件）</b><span>全部记录或满足条件的记录。</span></div><div class="flow-step"><i>3</i><b>Context Feeding（向智能体传入业务上下文）</b><span>把当前 Record、关联数据等传给 Agent（智能体）。</span></div><div class="flow-step"><i>4</i><b>Manual Trigger（人工触发）</b><span>也可以通过自定义按钮人工触发。</span></div><div class="flow-step"><i>5</i><b>Tool Parameter Mapping（工具参数映射）</b><span>将 Agent（智能体） Tool 参数映射到 CRM 字段与服务。</span></div><div class="flow-step"><i>6</i><b>Activate</b><span>进入 Active Agents，开始在生产环境运行。</span></div></div>
+<div class="card" style="margin-top:14px"><h4>Agent（智能体） 不只是聊天</h4><p>底层模型其实是：<strong>Trigger（触发条件） + Context（业务上下文） + Reasoning + Tools（可调用工具） + Action（执行动作） + Audit（审计记录）</strong>。这也是我们后续设计 CRM Agent（智能体） 后台最应该遵循的抽象。</p></div>
+</section><section class="subpage" id="zoho-lifecycle">
+<div class="section-title"><h2>完整 Agent（智能体） 生命周期</h2></div>
+<div class="arch">Home / Store（商店）
+    ↓
+Create Agent（智能体） / Hire Agent（智能体）
+    ↓
+Role（角色） + Instructions + KB + Tools（可调用工具） + Guardrails（安全边界/约束规则）
+    ↓
+Test with sample CRM data
+    ↓
+Deploy
+  ├─ Connection
+  └─ Digital Employee（数字员工）
+        ↓
+Activation Condition（智能体触发条件） + Parameter Mapping
+        ↓
+Production Run
+        ↓
+Observability（运行可观测性） / Sessions / Execution Metrics
+        ↓
+Versions / Redeploy / Rollback（版本回滚）
+        ↓
+Channel（渠道）s: ChatKit / Cliq / WhatsApp / API</div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>Record Owner（CRM记录负责人）</h4><p>Digital Employee（数字员工） 可以作为 Record Owner（CRM记录负责人），进入 Custom Views（视图）、Reports（报表）、Dashboard（仪表盘）s、Smart Filter（智能筛选） 等 owner-based 场景。</p></div>
+<div class="card"><h4>限制也被明确</h4><p>例如 Digital Employee（数字员工） 并不是普通 User Lookup，某些自动化规则也不能手动把它当 Owner（负责人）。这种“明确能力边界”非常重要。</p></div>
+</div>
+</section><section class="subpage" id="zoho-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>Agent（智能体） 创建、测试、部署、版本、观测非常完整</li><li>Digital Employee（数字员工） 解决身份与审计难题</li><li>Agent（智能体） 可作为 Record Owner（CRM记录负责人），真正进入 CRM 组织模型</li><li>连接多个用户渠道</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>对普通销售而言 Agent Studio（智能体搭建与管理台） 概念偏重</li><li>Digital Employee（数字员工） 能力仍存在产品边界与逐步开放范围</li><li>不适合在 CRM AI V1 就完整复制 Agent（智能体） Marketplace</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>V2 之后建立“AI 身份 + 权限 + 审计 + Version + Observability（运行可观测性）”，而不是一开始先做 Agent Store（智能体商店）。</div>
+</section><section class="subpage" id="zoho-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://help.zoho.com/portal/en/kb/crm/zia-artificial-intelligence/nextgen-agentic-ai/articles/zia-agents-in-zoho-crm" target="_blank"><span>Zia Agents in Zoho CRM</span><em>官方资料</em></a>
+<a class="source" href="https://help.zoho.com/portal/en/kb/crm/zia-artificial-intelligence/nextgen-agentic-ai/articles/setting-up-agents-26-4-2026" target="_blank"><span>Setting up Agents</span><em>官方资料</em></a>
+<a class="source" href="https://help.zoho.com/portal/en/kb/crm/zia-artificial-intelligence/nextgen-agentic-ai/articles/digital-employees-behavior-and-scope" target="_blank"><span>Digital Employee（数字员工）s: Behavior and Scope</span><em>官方资料</em></a>
+<a class="source" href="https://www.zoho.com/agents/resources/help/build-and-deploy/" target="_blank"><span>Zia Agents Build &amp; Deploy</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-fxiaoke">
+<div class="page-hero">
+<div class="kicker">竞品 05</div>
+<h1>纷享销客 · ShareAgent / Agentic CRM（智能体驱动CRM）</h1>
+<p>纷享销客 2026 年产品方向已经非常明确：通过 ShareAgent 统一前台入口，通过 ShareHive AgentOS（纷享销客智能体操作系统） / Agent Studio（智能体搭建与管理台） 组织 Agent（智能体）、Skill（技能/能力单元）、知识库、上下文与事件日志，再把能力原生嵌入 CRM/aPaaS（低代码应用平台） 的权限和流程边界。</p>
+<div class="badges"><span class="badge blue">国内重点</span><span class="badge green">ShareAgent</span><span class="badge orange">数字专家团</span><span class="badge blue">Agent Studio（智能体搭建与管理台）</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★</b><small>国内 Agentic CRM（智能体驱动CRM） 代表</small></div><div class="stat"><span>前台入口</span><b>ShareAgent</b><small>三栏式工作台</small></div><div class="stat"><span>后台</span><b>Agent Studio（智能体搭建与管理台）</b><small>Agent（智能体） / Skill（技能/能力单元） / KB / Context（业务上下文）</small></div><div class="stat"><span>治理</span><b>CRM 原生</b><small>继承权限与流程</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="fxiaoke-overview" onclick="showSub('fxiaoke','overview')">产品定位</button><button data-sub="fxiaoke-ui" onclick="showSub('fxiaoke','ui')">关键界面</button><button data-sub="fxiaoke-roles" onclick="showSub('fxiaoke','roles')">角色化 Agent（智能体）</button><button data-sub="fxiaoke-shareagent" onclick="showSub('fxiaoke','shareagent')">ShareAgent 机制</button><button data-sub="fxiaoke-studio" onclick="showSub('fxiaoke','studio')">Agent Studio（智能体搭建与管理台）</button><button data-sub="fxiaoke-journey" onclick="showSub('fxiaoke','journey')">业务链路</button><button data-sub="fxiaoke-judgment" onclick="showSub('fxiaoke','judgment')">产品判断</button><button data-sub="fxiaoke-sources" onclick="showSub('fxiaoke','sources')">证据来源</button></div><section class="subpage" id="fxiaoke-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>ShareAgent</h4><p>作为统一 AI 入口，用户直接描述目标；系统可以自动路由到对应 Agent（智能体）/Skill（技能/能力单元），也支持通过“/”显式选择 Skill（技能/能力单元）。</p></div>
+<div class="card"><h4>ShareHive AgentOS（纷享销客智能体操作系统）</h4><p>2026 年公开发布的智能体平台，用于承载 Agent（智能体） 产品家族与企业 AI 能力。</p></div>
+<div class="card"><h4>CRM 原生融合</h4><p>官方强调 Agent（智能体）、Skill（技能/能力单元） 与 CRM/aPaaS（低代码应用平台） 底座原生融合，继承业务权限和流程管控，不做独立外挂 AI。</p></div>
+</div>
+</section><section class="subpage" id="fxiaoke-ui">
+<div class="section-title"><h2>关键界面：基于官方帮助中心的结构复原</h2><p>由于官方帮助中心图片资源未直接暴露可嵌入 URL，这里按其明确描述复原界面结构，并提供原始帮助链接。</p></div>
+<div class="mock">
+<div class="mockbar"><i></i><i></i><i></i></div>
+<div class="mockbody">
+<div class="mockside">
+<b style="font-size:12px">ShareAgent</b>
+<div class="skeleton w80"></div><div class="skeleton w55"></div>
+<div class="skeleton w80"></div><div class="skeleton w35"></div>
+<p style="font-size:10px;color:#8791a2;margin-top:22px">自动化<br/>成果物<br/>智能体 &amp; Skill（技能/能力单元）</p>
+</div>
+<div class="mockmain">
+<div class="chat">帮我诊断一下这个客户，给出下一步经营建议</div>
+<div class="result"><b>执行过程</b><br/>客户数据查询 → 客户尽调 → 客户评分 → 诊断并生成建议</div>
+<div class="result"><b>AI 结果</b><br/>客户当前价值较高，但关键决策人关系不足，建议优先补齐决策链并确认预算窗口。</div>
+</div>
+<div class="mockright">
+<b style="font-size:12px">任务成果物</b>
+<div class="skeleton"></div><div class="skeleton w80"></div>
+<div class="result">客户经营诊断.html</div>
+<div class="result">CRM 客户对象</div>
+</div>
+</div>
+</div>
+<div class="callout"><b>官方界面描述：</b>左侧为入口与历史，中间为会话/执行/确认，右侧查看 CRM 对象、文件和任务成果物。</div>
+</section><section class="subpage" id="fxiaoke-roles">
+<div class="section-title"><h2>角色化“数字专家团”</h2></div>
+<div class="grid g3">
+<div class="card"><h4>AI 销售助理</h4><p>数据检索、信息整合、系统录单、销售记录等日常提效工作。</p></div>
+<div class="card"><h4>AI 销售顾问</h4><p>围绕客户互动、方案设计、合同撰写等场景进行作业指导。</p></div>
+<div class="card"><h4>AI 销售总监</h4><p>评估机会赢率、客户商情、最佳策略与行动建议，更偏经营和赢单判断。</p></div>
+</div>
+<div class="callout good"><b>产品表达很值得学：</b>普通业务用户更容易理解“助理 / 顾问 / 总监”，而不是“Retrieval Agent（智能体） / Planning Agent（智能体） / Tool Agent（智能体）”。</div>
+</section><section class="subpage" id="fxiaoke-shareagent">
+<div class="section-title"><h2>ShareAgent 前台机制</h2></div>
+<div class="grid g2">
+<div class="card"><h4>输入方式</h4><ul class="check"><li>自然语言文本</li><li>文件上传</li><li>移动端语音</li><li>通过 / 选择指定 Skill（技能/能力单元）</li></ul></div>
+<div class="card"><h4>输出与执行</h4><ul class="check"><li>展示 Agent（智能体） 执行过程</li><li>返回结构化结果</li><li>右侧生成成果物</li><li>可操作 CRM 对象记录</li></ul></div>
+</div>
+<div class="card" style="margin-top:14px"><h4>客户经营教练 Agent（智能体） 示例</h4><p>官方帮助文档明确给出链路：<strong>客户数据查询 → 客户尽调 → 客户评分 → 诊断并生成建议</strong>，并可生成 Markdown（文档标记格式）/HTML（网页格式） 报告。这已经从“回答一个问题”升级成业务任务编排。</p></div>
+</section><section class="subpage" id="fxiaoke-studio">
+<div class="section-title"><h2>Agent Studio（智能体搭建与管理台） 后台</h2></div>
+<div class="grid g3">
+<div class="card"><h4>版本管理</h4><p>顶栏支持 Version 选择、切换“使用中版本”、复制新版本、删除非生效版本。</p></div>
+<div class="card"><h4>能力装配</h4><p>侧栏包含基本信息、技能、知识库、上下文、事件日志；Agent（智能体） 可以从企业 Skill（技能/能力单元） 库挂载业务技能。</p></div>
+<div class="card"><h4>调试与可观察</h4><p>支持实时对话、版本切换、Context Mock（业务上下文模拟），并查看 Agent Loop（智能体循环执行过程） 与工具链调用信息。</p></div>
+</div>
+<div class="arch">Agent Studio（智能体搭建与管理台）
+│
+├─ Basic Info（基础信息） / System Prompt（系统提示词） / Model（模型）
+├─ Skill（技能/能力单元）s
+├─ Knowledge Base（知识库）
+├─ Context（业务上下文）
+├─ Event Logs（事件日志）
+│
+├─ Version Management（版本管理）
+└─ Debug Preview（预览）
+    ├─ Realtime Conversation（实时对话）
+    ├─ Context Mock（业务上下文模拟）
+    └─ Tool-chain（工具调用链） / Agent Loop（智能体循环执行过程）</div>
+</section><section class="subpage" id="fxiaoke-journey">
+<div class="section-title"><h2>典型完整业务链路</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>用户表达业务目标</b><span>例如“帮我准备明天拜访某客户”。</span></div><div class="flow-step"><i>2</i><b>ShareAgent 路由</b><span>识别意图并选择客户/商机/文档/流程等 Agent（智能体） 或 Skill（技能/能力单元）。</span></div><div class="flow-step"><i>3</i><b>读取 CRM Context（业务上下文）</b><span>客户、联系人、商机、互动记录、企业知识。</span></div><div class="flow-step"><i>4</i><b>行业 Knowhow 介入</b><span>结合首面策略、需求挖掘、竞争分析、报价策略等方法论。</span></div><div class="flow-step"><i>5</i><b>输出结构化建议</b><span>客户摘要、风险、机会、经营建议、行动计划。</span></div><div class="flow-step"><i>6</i><b>直接执行业务动作</b><span>录入、阶段推进、审批、任务、单据转换等。</span></div><div class="flow-step"><i>7</i><b>成果物与对象回写</b><span>在右侧展示文档、CRM 记录和执行结果。</span></div></div>
+</section><section class="subpage" id="fxiaoke-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>ShareAgent 的统一入口符合普通销售心智</li><li>Agent Studio（智能体搭建与管理台） 已具备较完整企业配置模型</li><li>技能、知识、Context（业务上下文） 与 CRM/aPaaS（低代码应用平台） 原生融合</li><li>角色化“助理/顾问/总监”表达清晰</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>平台能力丰富后，前台需要持续避免“万能助手过重”</li><li>Agent（智能体）/Skill（技能/能力单元） 数量增多后路由准确性和发现成本会成为体验问题</li><li>对不同企业的行业 Knowhow 质量要求很高</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>统一 Agent（智能体） 入口 + Skill（技能/能力单元） 后台路由，同时继续保留 AI 能力在客户/商机详情中的场景化嵌入，而不是把所有 AI 都塞进 ShareAgent。</div>
+</section><section class="subpage" id="fxiaoke-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://help.fxiaoke.com/ee88/f002/6666" target="_blank"><span>ShareAgent 使用手册</span><em>官方资料</em></a>
+<a class="source" href="https://help.fxiaoke.com/ee88/51a7/47ae" target="_blank"><span>2026年07月 AI 产品更新说明</span><em>官方资料</em></a>
+<a class="source" href="https://help.fxiaoke.com/ee88/f002/ddae" target="_blank"><span>Agent Studio（智能体搭建与管理台） 配置手册</span><em>官方资料</em></a>
+<a class="source" href="https://www.fxiaoke.com/ap/sfa-ai" target="_blank"><span>销售 Agents / 数字专家团</span><em>官方资料</em></a>
+<a class="source" href="https://www.fxiaoke.com/ap/solutions-ai" target="_blank"><span>纷享销客 AI 原生 CRM</span><em>官方资料</em></a>
+<a class="source" href="https://help.fxiaoke.com/ee88/4d1a/b52d/3d16" target="_blank"><span>客户经营教练 Agent（智能体）</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-xiaoshouyi">
+<div class="page-hero">
+<div class="kicker">竞品 06</div>
+<h1>销售易 · NeoAgent 2.0</h1>
+<p>销售易最值得研究的不是某个 AI 按钮，而是底层“业务语义本体 + Data for AI（面向AI的数据底座） + Agent（智能体） 执行层”。它试图解决企业 CRM 高度自定义后，大模型看得见字段却不理解业务含义的问题。</p>
+<div class="badges"><span class="badge blue">国内重点</span><span class="badge green">业务语义本体</span><span class="badge orange">Data for AI（面向AI的数据底座）</span><span class="badge blue">NeoAgent 2.0</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★</b><small>架构路线清晰</small></div><div class="stat"><span>核心壁垒</span><b>业务语义本体</b><small>对象/字段/指标/流程/规则</small></div><div class="stat"><span>交互方向</span><b>主动执行</b><small>从建议到干活</small></div><div class="stat"><span>平台能力</span><b>Agent Builder（智能体搭建器）</b><small>Prompt（提示词） / RAG（检索增强生成） / Debug / Audit（审计记录）</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="xiaoshouyi-overview" onclick="showSub('xiaoshouyi','overview')">产品定位</button><button data-sub="xiaoshouyi-ui" onclick="showSub('xiaoshouyi','ui')">关键界面</button><button data-sub="xiaoshouyi-semantic" onclick="showSub('xiaoshouyi','semantic')">业务语义本体</button><button data-sub="xiaoshouyi-sales" onclick="showSub('xiaoshouyi','sales')">销售 Agent（智能体）</button><button data-sub="xiaoshouyi-architecture" onclick="showSub('xiaoshouyi','architecture')">四层架构</button><button data-sub="xiaoshouyi-platform" onclick="showSub('xiaoshouyi','platform')">Agent（智能体） 平台</button><button data-sub="xiaoshouyi-judgment" onclick="showSub('xiaoshouyi','judgment')">产品判断</button><button data-sub="xiaoshouyi-sources" onclick="showSub('xiaoshouyi','sources')">证据来源</button></div><section class="subpage" id="xiaoshouyi-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>业务语义本体</h4><p>统一沉淀企业业务数据、指标定义、关系、业务动作、流程和规则，让 Agent（智能体） 理解“推进商机”等业务语言。</p></div>
+<div class="card"><h4>Data for AI（面向AI的数据底座）</h4><p>把结构化 CRM 数据和会议、邮件、企微对话、录音等非结构化数据转换为 AI 可理解、可检索的数据资产。</p></div>
+<div class="card"><h4>自主执行</h4><p>官方将 NeoAgent 2.0 定义为从“辅助建议”进化到“直接干活”，最终交付增长结果。</p></div>
+</div>
+</section><section class="subpage" id="xiaoshouyi-ui">
+<div class="section-title"><h2>关键界面：公开资料更偏架构，业务 UI 透明度相对低</h2></div>
+<div class="mock">
+<div class="mockbar"><i></i><i></i><i></i></div>
+<div class="mockbody" style="grid-template-columns:180px 1fr 250px">
+<div class="mockside">
+<b style="font-size:12px">销售 Agent（智能体）</b>
+<div class="skeleton"></div><div class="skeleton w80"></div>
+<p style="font-size:10px;color:#8791a2;margin-top:20px">客户360<br/>商机推进<br/>销售行为<br/>下一步建议</p>
+</div>
+<div class="mockmain">
+<div class="result"><b>商机健康度 78</b><br/>客户决策人覆盖不足 · 最近 10 天沟通频率下降</div>
+<div class="result"><b>建议行动</b><br/>① 补齐关键决策人 ② 安排方案复盘 ③ 推荐相似行业案例</div>
+<div class="chat">一键转为待办任务</div>
+</div>
+<div class="mockright">
+<b style="font-size:12px">业务上下文</b>
+<div class="skeleton"></div><div class="skeleton w80"></div>
+<div class="result">BANT（预算、决策权、需求、时间四项资格判断） / CCS（销售易使用的商机评估/销售方法模型）</div>
+<div class="result">客户互动数据</div>
+</div>
+</div>
+</div>
+<div class="callout warn"><b>说明：</b>该界面为基于官方能力描述的结构复原，不是销售易官方截图；当前官方公开信息更侧重 NeoAgent 2.0 架构与能力，而非完整一线操作页。</div>
+</section><section class="subpage" id="xiaoshouyi-semantic">
+<div class="section-title"><h2>业务语义本体：这一点非常关键</h2></div>
+<div class="arch">传统 LLM 看到：
+oppty_stage = P3
+amt = 680000
+field_x_123 = true
+
+业务语义本体把它解释成：
+“这是 68 万元商机，目前处在方案评估阶段，
+关键决策链尚未完整，当前允许执行的动作包括
+方案确认 / 技术交流 / 报价准备，进入商务谈判
+必须满足 X、Y、Z 条件。”
+
+                    ↓
+
+Agent（智能体） 才能理解：
+“推进这个商机”到底意味着什么。</div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h4>对高度自定义 CRM 的意义</h4><p>企业可以自己创建对象、字段、阶段、指标和工作流，如果没有语义层，Agent（智能体） 很容易只会“读字段”，不能理解业务。</p></div>
+<div class="card"><h4>对钉钉 AI CRM 的意义</h4><p>未来所有 AI Skill（技能/能力单元） 都应该走统一 Business Context（业务上下文），而不是每个 Skill（技能/能力单元） 自己写死“客户表”“商机金额”“阶段字段”。</p></div>
+</div>
+</section><section class="subpage" id="xiaoshouyi-sales">
+<div class="section-title"><h2>销售 Agent（智能体） 重点能力</h2></div>
+<div class="grid g3">
+<div class="card"><h4>商机健康度</h4><p>结合内外部多源数据，以及 CCS（销售易使用的商机评估/销售方法模型）、BANT（预算、决策权、需求、时间四项资格判断） 等模型，输出多维、可解释的健康评分。</p></div>
+<div class="card"><h4>主动风险识别</h4><p>主动提示客户异动、跟进缺失等风险，不再等销售自己翻活动记录。</p></div>
+<div class="card"><h4>行动建议</h4><p>结合商机阶段与销售活动，给出带优先级的个性化行动建议，并可推荐专家资源、案例资料，一键转待办。</p></div>
+</div>
+</section><section class="subpage" id="xiaoshouyi-architecture">
+<div class="section-title"><h2>Data for AI（面向AI的数据底座） 四层架构</h2></div>
+<div class="flow">
+<div class="flow-step"><i>1</i><b>数据感知</b><span>拜访录音、活动记录、会议、邮件、企微等。</span></div>
+<div class="flow-step"><i>2</i><b>语义提取</b><span>对结构化 / 非结构化数据做业务特征提取。</span></div>
+<div class="flow-step"><i>3</i><b>语义理解</b><span>形成统一语义层与语义索引。</span></div>
+<div class="flow-step"><i>4</i><b>Agent（智能体） 驱动</b><span>基于业务语义检索、推理、决策和执行。</span></div>
+</div>
+<div class="callout good"><b>研究判断：</b>这比“把 CRM 数据丢给大模型”更接近企业级 AI 的长期正确架构。</div>
+</section><section class="subpage" id="xiaoshouyi-platform">
+<div class="section-title"><h2>Agent（智能体） 开发平台</h2></div>
+<div class="grid g3">
+<div class="card"><h4>Prompt（提示词） Builder（提示词配置器）</h4><p>把 Agent（智能体） 行为和企业业务规则沉淀为可维护配置。</p></div>
+<div class="card"><h4>Agent Builder（智能体搭建器） / Agentic RAG（智能体增强检索）</h4><p>允许企业搭建自身场景 Agent（智能体），并将企业知识与业务工具接入。</p></div>
+<div class="card"><h4>可视化调试 / 安全审计</h4><p>官方首页明确把可视化调试引擎、安全合规和审计作为 Agent（智能体） 平台组成。</p></div>
+</div>
+<div class="arch">NeoAgent 2.0
+│
+├─ Business Semantic Ontology（业务语义本体）
+├─ Data Cloud（数据云） / AI-ready Data（可直接供AI使用的数据）
+├─ Agent（智能体） Platform
+│   ├─ Prompt（提示词） Builder（提示词配置器）
+│   ├─ Agent Builder（智能体搭建器）
+│   ├─ Agentic RAG（智能体增强检索）
+│   ├─ Visual Debug（可视化调试）
+│   └─ Security / Audit（安全与审计）
+└─ Business Agents（业务智能体）
+    ├─ Marketing（营销）
+    ├─ Sales
+    ├─ Channel（渠道）
+    └─ Service（服务）</div>
+</section><section class="subpage" id="xiaoshouyi-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>业务语义本体抓住了自定义 CRM 的核心难题</li><li>Data for AI（面向AI的数据底座） 对非结构化业务数据处理方向正确</li><li>主动风险 + NBA + 一键任务形成较清晰闭环</li><li>Agent（智能体） 平台能力较完整</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>官方公开资料中，架构信息明显多于一线真实操作 UI</li><li>业务语义本体建设质量会直接决定 Agent（智能体） 准确性</li><li>语义层、Data Cloud（数据云）、Agent（智能体） Platform 的企业实施成本不可忽视</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>钉钉 AI CRM 的长期底座必须有统一业务语义层，否则 CRM 越灵活，AI 越容易失真。</div>
+</section><section class="subpage" id="xiaoshouyi-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://www.xiaoshouyi.com/neoai" target="_blank"><span>NeoAgent 2.0 产品页</span><em>官方资料</em></a>
+<a class="source" href="https://www.xiaoshouyi.com/" target="_blank"><span>销售易官网 / NeoAgent 平台</span><em>官方资料</em></a>
+<a class="source" href="https://www.xiaoshouyi.com/about-us/99311.html" target="_blank"><span>NeoAgent 2.0 发布</span><em>官方资料</em></a>
+<a class="source" href="https://www.xiaoshouyi.com/about-us/99416.html" target="_blank"><span>NeoAgent 2.0 四层架构拆解</span><em>官方资料</em></a>
+<a class="source" href="https://www.xiaoshouyi.com/cdp" target="_blank"><span>客户数据平台 Data Cloud（数据云）</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-okki">
+<div class="page-hero">
+<div class="kicker">竞品 07</div>
+<h1>OKKI · 外贸垂直 AI CRM</h1>
+<p>OKKI 的参考价值在于“替我发现”与“管理者 AI”：它不仅做客户画像，还持续监测客户动态、识别高价值客户，并把谈单卡点、沟通质量、目标进度和经营异常直接推送给销售或管理者。</p>
+<div class="badges"><span class="badge blue">垂直 CRM</span><span class="badge green">AI 客户动态</span><span class="badge orange">AI 谈单监测</span><span class="badge blue">管理者 AI</span></div>
+<div class="stats"><div class="stat"><span>研究成熟度</span><b>★★★★</b><small>垂直场景很强</small></div><div class="stat"><span>销售侧</span><b>AI 客群</b><small>直接形成工作队列</small></div><div class="stat"><span>管理侧</span><b>异常监测</b><small>谈单/目标/经营</small></div><div class="stat"><span>差异点</span><b>外贸场景</b><small>外部数据与客户动态</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="okki-overview" onclick="showSub('okki','overview')">产品定位</button><button data-sub="okki-ui" onclick="showSub('okki','ui')">关键界面</button><button data-sub="okki-seller" onclick="showSub('okki','seller')">销售侧 AI</button><button data-sub="okki-manager" onclick="showSub('okki','manager')">管理者 AI</button><button data-sub="okki-journey" onclick="showSub('okki','journey')">完整链路</button><button data-sub="okki-pattern" onclick="showSub('okki','pattern')">AI Work Queue（AI工作队列）</button><button data-sub="okki-judgment" onclick="showSub('okki','judgment')">产品判断</button><button data-sub="okki-sources" onclick="showSub('okki','sources')">证据来源</button></div><section class="subpage" id="okki-overview">
+<div class="section-title"><h2>产品定位</h2></div>
+<div class="grid g3">
+<div class="card"><h4>AI 客户画像</h4><p>集中呈现客户跟进进展、采购偏好、成交意愿并提示跟进策略。</p></div>
+<div class="card"><h4>AI 客户动态监测</h4><p>基于客户商机旅程持续生成个性化跟进策略和行动指引。</p></div>
+<div class="card"><h4>AI 高价值客户识别</h4><p>从跟进中客户的行为数据识别潜在高价值客户，让销售优先投入。</p></div>
+</div>
+</section><section class="subpage" id="okki-ui">
+<div class="section-title"><h2>关键界面</h2></div>
+<div class="shots">
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="OKKI AI CRM / AI 客群相关界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/14Bo0sPXpVTa3BnLyAMKSzivTHAUhqLsTyA2eatvnzOKzw_4yenPnX4TpoIBJgTFG1aiPKEXFvNzDsAuNyy2UF0zf83LZrvvdVErn_vXzHp71GJJf5qt-hoA0NORM9Vm-B8jVf25D6wiP7ukP8MIv1zZLjRCWrEDygvKzdWfODlOSQBqkvNGO-K98ax6VeBc?purpose=fullsize"/>
+<figcaption><b>OKKI AI CRM / AI 客群相关界面</b><span>公开产品界面</span></figcaption>
+</figure>
+<figure class="shot" onclick="openImage(this.querySelector('img').src,this.querySelector('figcaption').innerText)">
+<img alt="OKKI 客户与销售 AI 相关界面" loading="lazy" referrerpolicy="no-referrer" src="https://images.openai.com/static-rsc-4/LP5Q55fZBA3tSRycWqC_9gCOjbJgshRHQvFWXLGAaLjyA_9TdZYh7Z0I_o4Kg_RBIr0N69E39pIfBoxxX_STZDzakAp1cORGmv6yiqzIo_RbmzG02-gxY3p6tU1b7DQByazK7oNngWLibasDEB7ZIpzDp6DqWK170JDmbeMV-cDrARKlArf9LKTXyvHK8Fqr?purpose=fullsize"/>
+<figcaption><b>OKKI 客户与销售 AI 相关界面</b><span>公开产品界面</span></figcaption>
+</figure>
+</div>
+<div class="callout"><b>观察：</b>OKKI 很强调把 AI 结果直接整理成“重点待跟进 / 谈单中 / 客户资料更新”等工作视图，而不是要求销售自己写筛选条件。</div>
+</section><section class="subpage" id="okki-seller">
+<div class="section-title"><h2>销售侧 AI</h2></div>
+<div class="grid g3">
+<div class="card"><h4>AI 客户画像</h4><p>将多次跟进中分散的信息转成当前客户经营状态。</p></div>
+<div class="card"><h4>AI 客户动态监测</h4><p>不是一次性摘要，而是随客户旅程变化持续刷新跟进策略。</p></div>
+<div class="card"><h4>AI 高价值客户识别</h4><p>把有限销售精力集中在更值得转化的客户。</p></div>
+<div class="card"><h4>AI 商机跟进</h4><p>围绕商机旅程给出推进与跟进辅助。</p></div>
+<div class="card"><h4>AI 商机诊断</h4><p>把商机问题从静态字段变成诊断与行动建议。</p></div>
+<div class="card"><h4>AI Work Queue（AI工作队列）</h4><p>最终把洞察整理成销售每天需要处理的客户队列。</p></div>
+</div>
+</section><section class="subpage" id="okki-manager">
+<div class="section-title"><h2>管理者 AI：非常值得研究</h2></div>
+<table class="compare">
+<thead><tr><th>能力</th><th>AI 做什么</th><th>管理者得到什么</th></tr></thead>
+<tbody>
+<tr><td>AI 谈单监测</td><td>每日更新重点客户洽谈进度，识别瓶颈</td><td>知道哪些谈单需要介入</td></tr>
+<tr><td>AI 沟通质量检测</td><td>多维检测团队客户沟通</td><td>定位成员能力弱项</td></tr>
+<tr><td>AI 目标跟进</td><td>跟踪业务目标完成进展</td><td>提前识别目标风险</td></tr>
+<tr><td>AI 经营数据监测</td><td>实时监控业务动态与关键指标异动</td><td>每日获取主动推送的数据摘要</td></tr>
+<tr><td>AI 数据助理</td><td>自然语言查询客户/商机/订单数据与报表</td><td>快速完成经营分析</td></tr>
+</tbody></table>
+<div class="callout good"><b>对钉钉 AI CRM：</b>管理者 AI 应该从“问数”升级成“主动发现管理问题 + 告诉我为什么 + 给出可执行的管理动作”。</div>
+</section><section class="subpage" id="okki-journey">
+<div class="section-title"><h2>典型业务链路</h2></div>
+<div class="flow"><div class="flow-step"><i>1</i><b>客户进入 CRM</b><span>来自外贸获客与历史客户池。</span></div><div class="flow-step"><i>2</i><b>客户画像</b><span>AI 汇总跟进进展、采购偏好和成交意愿。</span></div><div class="flow-step"><i>3</i><b>动态监测</b><span>随着沟通和商机变化持续刷新信号。</span></div><div class="flow-step"><i>4</i><b>高价值识别</b><span>将客户按价值与推进必要性重新排序。</span></div><div class="flow-step"><i>5</i><b>销售推进</b><span>给出跟进策略与行动指引。</span></div><div class="flow-step"><i>6</i><b>管理者监测</b><span>AI 同时检查谈单瓶颈、沟通质量和目标风险。</span></div><div class="flow-step"><i>7</i><b>经营闭环</b><span>异常进入工作台/摘要，触发销售或管理动作。</span></div></div>
+</section><section class="subpage" id="okki-pattern">
+<div class="section-title"><h2>AI Work Queue（AI工作队列） 范式</h2></div>
+<div class="arch">传统 CRM：
+客户列表 → 人工筛选 → 人工判断 → 人工决定今天跟谁
+
+OKKI 式 AI Work Queue（AI工作队列）：
+AI 持续监测
+    ↓
+按业务意义自动分组
+    ↓
+├─ 重点待跟进
+├─ 谈单中
+├─ 客户资料变化
+├─ 高价值客户
+└─ 风险 / 卡点
+    ↓
+销售直接进入今天的工作</div>
+<div class="callout"><b>产品价值：</b>这与 Salesforce 的 Ranked Hit-list 是同一类思想，只是 OKKI 更偏垂直业务客群化表达。</div>
+</section><section class="subpage" id="okki-judgment">
+<div class="section-title"><h2>产品判断</h2></div>
+<div class="judgment">
+<div class="pros"><h4>优势</h4><ul class="check"><li>“替我发现”非常突出</li><li>AI 客群把洞察直接转成销售工作队列</li><li>管理者 AI 场景比很多通用 CRM 更明确</li><li>垂直外贸数据与业务上下文构成差异化</li></ul></div>
+<div class="cons"><h4>局限 / 风险</h4><ul class="check"><li>垂直场景的做法不能全部复制到通用 CRM</li><li>Agent Builder（智能体搭建器） / 权限治理不是公开产品重点</li><li>通用型企业流程编排能力不如平台型厂商突出</li></ul></div>
+</div>
+<div class="callout good"><b>最值得借鉴：</b>首页“今日重点关注”与管理者“AI 异动监测”应该是钉钉 AI CRM 的核心前台场景。</div>
+</section><section class="subpage" id="okki-sources">
+<div class="section-title"><h2>主要来源</h2></div>
+<div class="sources">
+<a class="source" href="https://tw.okki.com/" target="_blank"><span>OKKI CRM + AiReach</span><em>官方资料</em></a>
+<a class="source" href="https://www.okki.com/" target="_blank"><span>OKKI 官网</span><em>官方资料</em></a>
+<a class="source" href="https://www.okki.com/upgrade.html" target="_blank"><span>OKKI 产品更新</span><em>官方资料</em></a>
+</div>
+</section></main><main class="page" id="page-recommend">
+<div class="page-hero">
+<div class="kicker">产品建议</div>
+<h1>对钉钉 AI CRM 的产品建议</h1>
+<p>结合 7 家竞品，不建议把 AI CRM 做成一个“大聊天框”。更合理的是让 AI 贯穿首页、客户、商机、会议/跟进事件与后台 Agent（智能体） 管理：主动发现 → 判断 → 建议 → 执行 → 回写 → 持续监控。</p>
+<div class="badges"><span class="badge blue">产品建议</span><span class="badge green">P0/P1/P2</span><span class="badge orange">V1→V4</span></div>
+<div class="stats"><div class="stat"><span>P0 核心</span><b>AI Workbench</b><small>今天该做什么</small></div><div class="stat"><span>P0 核心</span><b>AI Event（AI业务事件处理）</b><small>业务事件自动结构化</small></div><div class="stat"><span>P1 核心</span><b>CRM Agent（智能体）</b><small>目标式任务执行</small></div><div class="stat"><span>长期底座</span><b>Business Context（业务上下文）</b><small>业务语义 + 权限治理</small></div></div>
+</div><div class="term-note"><b>阅读说明：</b>竞品官方英文术语会保留原文，后面直接补中文解释；品牌名和产品名保留英文，避免和官网资料对不上。</div>
+<div class="subnav"><button data-sub="recommend-principles" onclick="showSub('recommend','principles')">底层原则</button><button data-sub="recommend-pages" onclick="showSub('recommend','pages')">核心页面</button><button data-sub="recommend-workbench" onclick="showSub('recommend','workbench')">AI 工作台</button><button data-sub="recommend-event" onclick="showSub('recommend','event')">AI Event（AI业务事件处理）</button><button data-sub="recommend-agent" onclick="showSub('recommend','agent')">CRM Agent（智能体）</button><button data-sub="recommend-backend" onclick="showSub('recommend','backend')">Agent（智能体） 后台</button><button data-sub="recommend-roadmap" onclick="showSub('recommend','roadmap')">版本路线</button><button data-sub="recommend-priority" onclick="showSub('recommend','priority')">优先级</button></div><section class="subpage" id="recommend-principles">
+<div class="section-title"><h2>8 条底层原则</h2></div>
+<div class="grid g2">
+<div class="card"><h4>① AI 先主动发现</h4><p>用户打开 CRM 时先知道今天需要关注什么，而不是先让他向 AI 提问。</p></div>
+<div class="card"><h4>② 每条建议都要有“为什么现在”</h4><p>来源信号、日期和判断依据必须可见，降低黑盒感。</p></div>
+<div class="card"><h4>③ AI 输出必须能变成行动</h4><p>建议后面直接跟生成话术、创建任务、安排会议、更新商机、发起流程。</p></div>
+<div class="card"><h4>④ 业务事件优先于单条跟进记录</h4><p>会议/拜访会影响多个 CRM 对象与字段，AI 应一次识别并统一确认。</p></div>
+<div class="card"><h4>⑤ 前台一个 Agent（智能体），后台多个 Skill（技能/能力单元）</h4><p>用户只表达业务目标，不让普通销售自己做 Agent（智能体） 编排。</p></div>
+<div class="card"><h4>⑥ 高风险动作必须 Human Review（审核）</h4><p>读数据、总结、内部建议可自动；关键外发与交易动作需要分级授权。</p></div>
+<div class="card"><h4>⑦ Agent（智能体） 要有身份、权限和审计</h4><p>当 AI 真正能写 CRM，系统必须知道谁做了什么、依据是什么。</p></div>
+<div class="card"><h4>⑧ 建立统一 Business Context（业务上下文）</h4><p>CRM 高度自定义，Agent（智能体） 要统一理解对象、字段、指标、关系、阶段、流程与权限。</p></div>
+</div>
+</section><section class="subpage" id="recommend-pages">
+<div class="section-title"><h2>建议先做好 6 个核心页面</h2></div>
+<div class="grid g3">
+<div class="card"><h4>01 CRM 首页 · AI 工作台</h4><p>今日 AI 建议、风险商机、机会客户、客户信号、目标风险、Next Best Action（下一步最佳行动建议）。</p></div>
+<div class="card"><h4>02 客户详情 · AI Context（业务上下文）</h4><p>不重做页面结构，只在原客户详情增加摘要、机会、风险、关系变化和推荐下一步。</p></div>
+<div class="card"><h4>03 商机详情 · AI 推进</h4><p>商机健康度、最近变化、关键风险、决策链、竞争情况、推荐动作。</p></div>
+<div class="card"><h4>04 跟进 / 会议后 · AI Event（AI业务事件处理）</h4><p>AI 自动识别跟进记录、商机阶段、预计时间、联系人/决策人、任务等变化。</p></div>
+<div class="card"><h4>05 CRM AI Agent（智能体）</h4><p>统一目标式入口：用户说“帮我推进这个客户”，系统自己调度 Skill（技能/能力单元）s 并执行。</p></div>
+<div class="card"><h4>06 管理后台 · Agent（智能体） 管理</h4><p>配置对象、触发、数据范围、可执行动作、人工审核、版本、日志和 Handoff（交接给销售或其他智能体）。</p></div>
+</div>
+</section><section class="subpage" id="recommend-workbench">
+<div class="section-title"><h2>首页 AI 工作台：学习 Salesforce + OKKI</h2></div>
+<div class="mock">
+<div class="mockbar"><i></i><i></i><i></i></div>
+<div class="mockbody" style="grid-template-columns:170px 1fr 280px">
+<div class="mockside"><b style="font-size:12px">CRM</b><div class="skeleton"></div><div class="skeleton w80"></div><div class="skeleton w55"></div></div>
+<div class="mockmain">
+<b style="font-size:15px">今日 AI 建议</b>
+<div class="result"><b>🔥 杭州 XX 科技 · ¥680,000</b><br/>为什么现在：8/20 再次查看报价 · 8/18 提到月底定供应商 · 8/16 决策人加入<br/><br/><b>AI判断：</b>未来 7 天可能进入供应商决策窗口。<br/><br/>建议：邀请技术负责人参与方案确认。</div>
+<div class="chat">生成话术　创建任务　查看客户</div>
+</div>
+<div class="mockright"><b style="font-size:12px">今日概览</b><div class="result">5 个优先客户</div><div class="result">3 个风险商机</div><div class="result">2 个机会信号</div><div class="result">1 个目标风险</div></div>
+</div></div>
+<div class="callout good"><b>核心：</b>不要只告诉“14 天没跟进”，而是展示信号来源、Why Now（为什么现在值得跟进）、AI 判断和立即可执行动作。</div>
+</section><section class="subpage" id="recommend-event">
+<div class="section-title"><h2>AI Event（AI业务事件处理）：优先级应该非常高</h2></div>
+<div class="arch">用户说：
+“今天跟客户聊了，技术方案没问题，但报价高了 10%，
+老板要参与下一轮决策，计划月底决定。”
+
+                 ↓
+
+AI 识别到 5 项变化
+├─ 跟进记录：自动生成
+├─ 商机阶段：方案沟通 → 商务谈判（建议）
+├─ 决策人：新增“老板 / CEO”（建议）
+├─ 预计成交：8 月底（建议）
+└─ 下一步任务：准备价格说明 + 邀请管理层
+
+                 ↓
+
+              [确认全部]
+              [逐项修改]
+
+                 ↓
+            CRM 多对象回写</div>
+<div class="callout good"><b>这比“AI 帮我写跟进记录”价值高得多。</b>建议直接学习 HubSpot Smart Deal Progression（智能商机推进） 的产品逻辑。</div>
+</section><section class="subpage" id="recommend-agent">
+<div class="section-title"><h2>CRM AI Agent（智能体）：统一入口，但不是唯一入口</h2></div>
+<div class="arch">用户：帮我推进杭州 XX 科技
+          ↓
+CRM AI Agent（智能体）
+          ↓
+理解业务目标 + 当前 CRM Context（业务上下文）
+          ↓
+┌─────────┬─────────┬──────────┐
+客户摘要   商机诊断   决策链分析
+风险判断   文档生成   流程 / CRM 操作
+└─────────┴─────────┴──────────┘
+          ↓
+生成推进计划
+1. 联系采购负责人
+2. 准备价格差异说明
+3. 安排技术 Demo
+          ↓
+[生成话术] [创建任务] [安排会议] [更新商机]</div>
+<div class="callout"><b>关键：</b>前台不展示“我调用了 7 个 Skill（技能/能力单元）”作为主要体验；普通用户只关心任务有没有完成。</div>
+</section><section class="subpage" id="recommend-backend">
+<div class="section-title"><h2>Agent（智能体） 后台：学习 Microsoft + Zoho + 纷享销客</h2></div>
+<div class="grid g2">
+<div class="card"><h4>业务配置</h4><ul class="check"><li>Agent（智能体） 作用对象</li><li>进入条件 / Trigger（触发条件）</li><li>读取数据范围</li><li>允许执行动作</li><li>Handoff（交接给销售或其他智能体） 条件</li><li>人工审核模式</li></ul></div>
+<div class="card"><h4>治理与运行</h4><ul class="check"><li>Agent（智能体） 身份 / Role（角色）</li><li>版本管理</li><li>事件日志</li><li>执行成功率 / 异常</li><li>Tool 调用</li><li>回滚 / 停用</li></ul></div>
+</div>
+<div class="callout warn"><b>V1 不建议做 Agent Store（智能体商店）。</b>先让系统预置 Agent（智能体） 真正产生业务价值，再逐步把配置能力开放给管理员。</div>
+</section><section class="subpage" id="recommend-roadmap">
+<div class="section-title"><h2>V1 → V4 演进路线</h2></div>
+<div class="timeline">
+<div class="titem"><b>V1 · 系统预置 AI 能力</b><p>AI 工作台、AI 客户摘要、AI Event（AI业务事件处理）、风险/机会、Next Best Action（下一步最佳行动建议）。普通用户无需理解 Agent（智能体）。</p></div>
+<div class="titem"><b>V2 · 管理员可配置 Agent（智能体）</b><p>对象、Trigger（触发条件）、数据范围、Action（执行动作）、Handoff（交接给销售或其他智能体）、Human Review（审核）、日志。</p></div>
+<div class="titem"><b>V3 · 自定义 Agent（智能体） / Skill（技能/能力单元）</b><p>Agent Builder（智能体搭建器）、Skill（技能/能力单元） 编排、业务语义配置、企业知识库与 Tool 接入。</p></div>
+<div class="titem"><b>V4 · Digital Employee（数字员工） / Marketplace</b><p>Agent（智能体） 身份、Owner（负责人）、组织权限、指标考核，以及企业内外 Agent（智能体） 生态。</p></div>
+</div>
+</section><section class="subpage" id="recommend-priority">
+<div class="section-title"><h2>建议优先级</h2></div>
+<table class="compare">
+<thead><tr><th>优先级</th><th>能力</th><th>理由</th><th>主要参考</th></tr></thead>
+<tbody>
+<tr><td><b>P0</b></td><td>AI 工作台 / 今日重点</td><td>直接回答销售“今天做什么”</td><td>Salesforce / OKKI</td></tr>
+<tr><td><b>P0</b></td><td>AI 客户/商机摘要 + 风险机会</td><td>利用现有 CRM 数据最快形成价值</td><td>Salesforce / Microsoft / 销售易</td></tr>
+<tr><td><b>P0</b></td><td>AI Event（AI业务事件处理）</td><td>明显降低录入成本，并提升 CRM 数据质量</td><td>HubSpot</td></tr>
+<tr><td><b>P1</b></td><td>Next Best Action（下一步最佳行动建议） + 一键任务</td><td>从“看懂”走向“推进”</td><td>Salesforce / 销售易</td></tr>
+<tr><td><b>P1</b></td><td>统一 CRM AI Agent（智能体）</td><td>承接复杂目标式任务</td><td>纷享销客 / Microsoft</td></tr>
+<tr><td><b>P2</b></td><td>Agent（智能体） 管理后台</td><td>当 Action（执行动作） 能力扩大后必须治理</td><td>Zoho / Microsoft / 纷享销客</td></tr>
+<tr><td><b>P3</b></td><td>自定义 Agent（智能体） / Agent Store（智能体商店）</td><td>平台化价值高，但不是 V1 核心</td><td>Zoho / Salesforce</td></tr>
+</tbody></table>
+</section></main>
+</div>
+</div><div class="glossary-modal" id="glossaryModal" onclick="closeGlossary()">
+<div class="glossary-panel" onclick="event.stopPropagation()">
+<div class="glossary-head"><div><b>英文术语速查</b><span>CRM AI 竞品研究常见词</span></div><button onclick="closeGlossary()">×</button></div>
+<div class="glossary-grid">
+<div><b>Agent</b><span>智能体。能够理解目标、调用工具并执行任务的 AI。</span></div>
+<div><b>Skill</b><span>技能/能力单元。Agent 可调用的具体业务能力。</span></div>
+<div><b>Context</b><span>业务上下文。AI 判断时可读取的客户、商机、邮件、会议等信息。</span></div>
+<div><b>Why Now</b><span>为什么现在值得行动。解释客户此刻应被优先关注的依据。</span></div>
+<div><b>Next Best Action</b><span>下一步最佳行动建议。AI 推荐此刻最值得做的业务动作。</span></div>
+<div><b>Prospecting</b><span>潜客开发。寻找和筛选值得销售跟进的潜在客户。</span></div>
+<div><b>Lead</b><span>线索。尚未充分验证、需要继续培育和资格判断的销售机会来源。</span></div>
+<div><b>Opportunity / Deal</b><span>商机。已经进入明确销售推进阶段的成交机会。</span></div>
+<div><b>Handoff</b><span>交接。把客户/任务从一个 Agent 转给另一个 Agent 或销售人员。</span></div>
+<div><b>Human-in-the-loop</b><span>人在回路。AI 提建议或执行前，由人进行审核确认。</span></div>
+<div><b>Digital Employee</b><span>数字员工。拥有独立身份、角色、权限和审计记录的 Agent。</span></div>
+<div><b>Buying Signal</b><span>购买信号。如融资、招聘、访问报价页、活跃度上升等可能预示采购意向的变化。</span></div>
+<div><b>RAG</b><span>检索增强生成。AI 回答前先检索企业知识或数据，再基于检索结果生成答案。</span></div>
+<div><b>BANT</b><span>销售资格判断框架：预算、决策权、需求、时间。</span></div>
+<div><b>Guardrails</b><span>安全边界。限制 Agent 能读什么、能做什么、何时必须人工确认。</span></div>
+<div><b>Observability</b><span>可观测性。查看 Agent 执行过程、工具调用、成功率与异常。</span></div>
+<div><b>Agent Builder / Studio</b><span>智能体搭建器。管理员配置 Agent 的角色、知识、工具、触发条件等。</span></div>
+<div><b>Business Semantic Ontology</b><span>业务语义本体。让 AI 理解企业对象、字段、指标、流程、规则之间的业务含义。</span></div>
+</div>
+</div>
+</div>
+
+<div class="modal" id="imgModal" onclick="closeImage()">
+<button class="close" onclick="closeImage()">×</button>
+<div class="modal-inner" onclick="event.stopPropagation()">
+<img alt="" id="modalImg"/>
+<p id="modalCap"></p>
+</div>
+</div>
+<script>
+const names={
+ overview:'总对比',salesforce:'Salesforce',hubspot:'HubSpot',
+ microsoft:'Microsoft Dynamics 365',zoho:'Zoho CRM',
+ fxiaoke:'纷享销客',xiaoshouyi:'销售易',okki:'OKKI',recommend:'产品建议'
+};
+
+function showPage(id, push=true){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('.menu-btn').forEach(x=>x.classList.remove('active'));
+ const page=document.getElementById('page-'+id);
+ if(!page){id='overview';}
+ document.getElementById('page-'+id).classList.add('active');
+ const btn=document.querySelector(`.menu-btn[data-page="${id}"]`);
+ if(btn)btn.classList.add('active');
+ document.getElementById('crumb').textContent='CRM AI 竞品研究 / '+names[id];
+ const first=document.querySelector(`#page-${id} .subnav button`);
+ if(first){ first.click(); }
+ window.scrollTo({top:0,behavior:'instant'});
+ if(push) history.replaceState(null,'','#'+id);
+}
+function showSub(page,key){
+ document.querySelectorAll(`#page-${page} .subpage`).forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll(`#page-${page} .subnav button`).forEach(x=>x.classList.remove('active'));
+ const el=document.getElementById(`${page}-${key}`);
+ if(el)el.classList.add('active');
+ const b=document.querySelector(`#page-${page} .subnav button[data-sub="${page}-${key}"]`);
+ if(b)b.classList.add('active');
+}
+function openImage(src,cap){
+ const m=document.getElementById('imgModal');
+ document.getElementById('modalImg').src=src;
+ document.getElementById('modalCap').textContent=cap;
+ m.classList.add('open');
+}
+function closeImage(){document.getElementById('imgModal').classList.remove('open')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeImage()});
+const init=location.hash.replace('#','')||'overview';
+showPage(names[init]?init:'overview',false);
+
+function openGlossary(){document.getElementById('glossaryModal').classList.add('open')}
+function closeGlossary(){document.getElementById('glossaryModal').classList.remove('open')}
+</script>
+</body>
+</html>
